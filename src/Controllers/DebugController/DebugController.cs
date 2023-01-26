@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BircheMmoUserApi.Controllers;
 
 [ApiController]
-[Route("/api/debug")]
+[Route("api/debug")]
 public class DebugController : ControllerBase
 {
 

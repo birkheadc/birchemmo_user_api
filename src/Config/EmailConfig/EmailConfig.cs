@@ -15,7 +15,6 @@ public class EmailConfig
   /// </summary>
   public EmailConfig()
   {
-    // Todo
     Name = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NOREPLY_NAME") ?? "";
     Address = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NOREPLY_NAME") ?? "";
     SmtpServer = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NOREPLY_NAME") ?? "";

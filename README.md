@@ -21,6 +21,10 @@ dotnet user-secrets set EmailConfigNoReply:SmtpServer {your email servers smtp s
 dotnet user-secrets set EmailConfigNoReply:Port {most likely 465 or 587}
 dotnet user-secrets set EmailConfigNoReply:Username {your email account's username}
 dotnet user-secrets set EmailConfigNoReply:Password {your email accounts password}
+
+dotnet user-secrets set JwtConfig:Issuer {address this application lives at}
+dotnet user-secrets set JwtConfig:Audience {address where the token will be consumed, in this case same as issuer}
+dotnet user-secrets set JwtConfig:Key {a random string of at least n length, keep secret (I can't remember what n is...)}
 ```
 
 ### Production
@@ -34,4 +38,8 @@ ASPNETCORE_EMAILCONFIG_NOREPLY_SMTPSERVER
 ASPNETCORE_EMAILCONFIG_NOREPLY_PORT
 ASPNETCORE_EMAILCONFIG_NOREPLY_USERNAME
 ASPNETCORE_EMAILCONFIG_NOREPLY_PASSWORD
+
+ASPNETCORE_JWTCONFIG_ISSUER
+ASPNETCORE_JWTCONFIG_AUDIENCE
+ASPNETCORE_JWTCONFIG_KEY
 ```

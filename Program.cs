@@ -14,11 +14,17 @@ if (builder.Environment.IsDevelopment())
   builder.Services.AddSingleton(
     builder.Configuration.GetSection("EmailConfigNoReply").Get<EmailConfig>()
   );
+  builder.Services.AddSingleton(
+    builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>()
+  );
 }
 else
 {
   builder.Services.AddSingleton(
     new EmailConfig()
+  );
+  builder.Services.AddSingleton(
+    new JwtConfig()
   );
 }
 
