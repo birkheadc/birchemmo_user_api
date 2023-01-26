@@ -1,5 +1,6 @@
 using BircheMmoUserApi.Models;
 using BircheMmoUserApi.Repositories;
+using MongoDB.Bson;
 
 namespace BircheMmoUserApi.Services;
 
@@ -12,13 +13,36 @@ public class UserService : IUserService
     this.userRepository = userRepository;
   }
 
-  public async Task<IEnumerable<UserModel>> GetAllUsers()
+  public async Task CreateUser(NewUserModel user)
   {
-    throw new NotImplementedException();
+    await userRepository.CreateUser(user);
   }
 
-  public async Task<UserModel> GetUserByUsername(string Username)
+  public async Task DeleteUserById(ObjectId id)
   {
-    throw new NotImplementedException();
+    await userRepository.DeleteUserById(id);
+  }
+
+  public async Task EditUser(UserViewModel user)
+  {
+    await userRepository.EditUser(user);
+  }
+
+  public async Task<IEnumerable<UserModel>> GetAllUsers()
+  {
+    IEnumerable<UserModel> users = await userRepository.FindAllUsers();
+    return users;
+  }
+
+  public async Task<UserModel> GetUserById(ObjectId id)
+  {
+    UserModel user = await userRepository.FindUserById(id);
+    return user;
+  }
+
+  public async Task<UserModel> GetUserByUsername(string username)
+  {
+    UserModel user = await userRepository.FindUserByUsername(username);
+    return user;
   }
 }

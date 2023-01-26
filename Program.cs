@@ -1,4 +1,5 @@
 using BircheMmoUserApi.Config;
+using BircheMmoUserApi.Repositories;
 using BircheMmoUserApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserViewService, UserViewService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISessionService, SessionService>();
 
 if (builder.Environment.IsDevelopment())
 {
