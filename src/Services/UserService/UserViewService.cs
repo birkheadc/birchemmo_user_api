@@ -12,9 +12,10 @@ public class UserViewService : IUserViewService
     this.userService = userService;
   }
 
-  public async Task CreateUser(NewUserModel user)
+  public async Task<UserViewModel> CreateUser(NewUserModel user)
   {
-    await userService.CreateUser(user);
+    UserModel userModel = await userService.CreateUser(user);
+    return ToViewModel(userModel);
   }
 
   public async Task DeleteUserById(ObjectId id)

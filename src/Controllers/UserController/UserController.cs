@@ -58,8 +58,8 @@ public class UserController : ControllerBase
   {
     try
     {
-      await userService.CreateUser(user);
-      return Ok();
+      UserViewModel userViewModel = await userService.CreateUser(user);
+      return Ok(userViewModel);
     }
     catch
     {

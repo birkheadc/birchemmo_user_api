@@ -13,9 +13,10 @@ public class UserService : IUserService
     this.userRepository = userRepository;
   }
 
-  public async Task CreateUser(NewUserModel user)
+  public async Task<UserModel> CreateUser(NewUserModel user)
   {
-    await userRepository.CreateUser(user);
+    UserModel userModel = await userRepository.CreateUser(user);
+    return userModel;
   }
 
   public async Task DeleteUserById(ObjectId id)
