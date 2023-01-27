@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/birchemmo_user_api.csproj",
+        "${workspaceFolder}/app/birchemmo_user_api.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -19,7 +19,7 @@
       "type": "process",
       "args": [
         "publish",
-        "${workspaceFolder}/birchemmo_user_api.csproj",
+        "${workspaceFolder}/app/birchemmo_user_api.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -33,7 +33,7 @@
         "watch",
         "run",
         "--project",
-        "${workspaceFolder}/birchemmo_user_api.csproj"
+        "${workspaceFolder}/app/birchemmo_user_api.csproj"
       ],
       "problemMatcher": "$msCompile"
     }
