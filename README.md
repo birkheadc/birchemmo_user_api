@@ -8,22 +8,18 @@ This is the API that manages Users and Login Sessions for the online game / webs
 
 The following environment variables are needed to run the application.
 
+Some of these variables are not sensitive, and so are read in via `appsettings.json`. Sensitive variables, like the JwtConfig:Key and email login credentials, should be treated with more care.
+
 In development, these can be created as dotnet user-secrets via `dotnet user-secrets init` followed by `dotnet user-secrets set {key} {value}`
 
-In production, I generally set the values through Docker. This may change if I decide not to use Docker for this application.
+In production, I generally set the values through Docker, via a docker-compose file that is not commited to version control. This may change if I decide not to use Docker for this application.
 
 ### Development
 
 ```
-dotnet user-secrets set EmailConfigNoReply:Name no-reply
-dotnet user-secrets set EmailConfigNoReply:Address {your email address here}
-dotnet user-secrets set EmailConfigNoReply:SmtpServer {your email servers smtp server}
-dotnet user-secrets set EmailConfigNoReply:Port {most likely 465 or 587}
 dotnet user-secrets set EmailConfigNoReply:Username {your email account's username}
 dotnet user-secrets set EmailConfigNoReply:Password {your email accounts password}
 
-dotnet user-secrets set JwtConfig:Issuer {address this application lives at}
-dotnet user-secrets set JwtConfig:Audience {address where the token will be consumed, in this case same as issuer}
 dotnet user-secrets set JwtConfig:Key {a random string of at least n length, keep secret (I can't remember what n is...)}
 ```
 
@@ -32,14 +28,8 @@ dotnet user-secrets set JwtConfig:Key {a random string of at least n length, kee
 Same as above, but the variable names are slightly different
 
 ```
-ASPNETCORE_EMAILCONFIG_NOREPLY_NAME
-ASPNETCORE_EMAILCONFIG_NOREPLY_ADDRESS
-ASPNETCORE_EMAILCONFIG_NOREPLY_SMTPSERVER
-ASPNETCORE_EMAILCONFIG_NOREPLY_PORT
-ASPNETCORE_EMAILCONFIG_NOREPLY_USERNAME
-ASPNETCORE_EMAILCONFIG_NOREPLY_PASSWORD
+ASPNETCORE_EMAILCONFIG_USERNAME
+ASPNETCORE_EMAILCONFIG_PASSWORD
 
-ASPNETCORE_JWTCONFIG_ISSUER
-ASPNETCORE_JWTCONFIG_AUDIENCE
 ASPNETCORE_JWTCONFIG_KEY
 ```
