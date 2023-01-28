@@ -1,4 +1,3 @@
-using BircheMmoUserApi.Exceptions;
 using BircheMmoUserApi.Models;
 using BircheMmoUserApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -39,12 +38,9 @@ public class UserController : ControllerBase
   {
     try
     {
-      UserViewModel user = await userService.GetUserById(id);
+      UserViewModel? user = await userService.GetUserById(id);
+      if (user is null) return NotFound();
       return Ok(user);
-    }
-    catch (UserNotFoundException)
-    {
-      return NotFound();
     }
     catch
     {
@@ -58,7 +54,8 @@ public class UserController : ControllerBase
   {
     try
     {
-      UserViewModel userViewModel = await userService.CreateUser(user);
+      UserViewModel? userViewModel = await userService.CreateUser(user);
+      if (userViewModel is null) return StatusCode(9002);
       return Ok(userViewModel);
     }
     catch

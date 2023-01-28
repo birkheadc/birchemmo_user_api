@@ -27,8 +27,8 @@ public class BasicAuthAttribute : Attribute, IAsyncActionFilter
     // Check credentials, refuse access if not valid
     Credentials credentials = GetCredentialsFromBasic(basic);
     IUserService userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-    UserModel user = await userService.GetUserByUsername(credentials.Username);
-
+    UserModel? user = await userService.GetUserByUsername(credentials.Username);
+    
     if (AreCredentialsValid(user, credentials) == false)
     {
       context.Result = new UnauthorizedResult();
@@ -44,7 +44,7 @@ public class BasicAuthAttribute : Attribute, IAsyncActionFilter
     return CredentialsDecoder.DecodeCredentialsFromBasic(basic);
   }
 
-  private bool AreCredentialsValid(UserModel user, Credentials credentials)
+  private bool AreCredentialsValid(UserModel? user, Credentials credentials)
   {
     if (user is null) return false;
     return BCrypt.Net.BCrypt.Verify(credentials.Password, user.HashedPassword);

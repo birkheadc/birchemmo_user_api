@@ -14,18 +14,17 @@ public class EmailService : IEmailService
     this.emailConfig = emailConfig;
   }
 
-  public async Task SendTestEmailAsync(string recName, string recAddress)
+  public async Task<bool> SendEmailAsync(string receiverName, string receiverAddress, string subject, string body)
   {
-    Console.WriteLine("Log in using {0} : {1}", emailConfig.Username, emailConfig.Password);
-    Console.WriteLine("Send message to {0} at {1}", recName, recAddress);
     EmailMessage message = new()
     {
-      To = new MailboxAddress("Master Birkhead", "birkheadc@gmail.com"),
-      Subject = "This is a test.",
-      Content = "This is a test to see if I can send email!"
+      To = new MailboxAddress(receiverName, receiverAddress),
+      Subject = subject,
+      Body = body
     };
     MimeMessage mimeMessage = CreateMimeMessage(message);
-    await SendMimeMessage(mimeMessage);
+    bool didSend = await SendMimeMessage(mimeMessage);
+    return didSend;
   }
 
   private MimeMessage CreateMimeMessage(EmailMessage message)
@@ -37,14 +36,14 @@ public class EmailService : IEmailService
 
     BodyBuilder bodyBuilder = new()
     {
-      TextBody = message.Content
+      TextBody = message.Body
     };
 
     mimeMessage.Body = bodyBuilder.ToMessageBody();
     return mimeMessage;
   }
 
-  private async Task SendMimeMessage(MimeMessage message)
+  private async Task<bool> SendMimeMessage(MimeMessage message)
   {
     using (SmtpClient client = new())
     {
@@ -58,16 +57,17 @@ public class EmailService : IEmailService
         await client.SendAsync(message);
         Console.WriteLine("Sent successfully!");
       }
-      catch (Exception e)
+      catch
       {
         Console.WriteLine("Failed to send email.");
-        Console.WriteLine("Error: " + e.Message);
+        return false;
       }
       finally
       {
         await client.DisconnectAsync(true);
         client.Dispose();
       }
+      return true;
     }
   }
 }

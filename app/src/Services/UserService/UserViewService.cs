@@ -12,9 +12,9 @@ public class UserViewService : IUserViewService
     this.userService = userService;
   }
 
-  public async Task<UserViewModel> CreateUser(NewUserModel user)
+  public async Task<UserViewModel?> CreateUser(NewUserModel user)
   {
-    UserModel userModel = await userService.CreateUser(user);
+    UserModel? userModel = await userService.CreateUser(user);
     return ToViewModel(userModel);
   }
 
@@ -34,27 +34,28 @@ public class UserViewService : IUserViewService
     return ToViewModel(userModels);
   }
 
-  public async Task<UserViewModel> GetUserById(ObjectId id)
+  public async Task<UserViewModel?> GetUserById(ObjectId id)
   {
-    UserModel userModel = await userService.GetUserById(id);
+    UserModel? userModel = await userService.GetUserById(id);
     return ToViewModel(userModel);
   }
 
-  public async Task<UserViewModel> GetUserByUsername(string username)
+  public async Task<UserViewModel?> GetUserByUsername(string username)
   {
-    UserModel userModel = await userService.GetUserByUsername(username);
+    UserModel? userModel = await userService.GetUserByUsername(username);
     return ToViewModel(userModel);
   }
 
-  private UserViewModel ToViewModel(UserModel userModel)
+  private UserViewModel? ToViewModel(UserModel? userModel)
   {
-    return new UserViewModel()
-    {
-      Id = userModel.Id,
-      Username = userModel.Username,
-      Role = userModel.Role,
-      IsEmailVerified = userModel.IsEmailVerified
-    };
+    if (userModel is null) return null;
+    return new UserViewModel
+    (
+      userModel.Id,
+      userModel.Username,
+      userModel.Role,
+      userModel.IsEmailVerified
+    );
   }
 
   private IEnumerable<UserViewModel> ToViewModel(IEnumerable<UserModel> userModels)
@@ -62,7 +63,7 @@ public class UserViewService : IUserViewService
     List<UserViewModel> userViewModels = new();
     foreach (UserModel userModel in userModels)
     {
-      userViewModels.Add(ToViewModel(userModel));
+      userViewModels.Add(ToViewModel(userModel)!);
     }
     return userViewModels;
   }

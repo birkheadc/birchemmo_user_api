@@ -21,8 +21,8 @@ public class DebugController : ControllerBase
   {
     try
     {
-      await emailService.SendTestEmailAsync("Master Colby", "birkheadc@gmail.com");
-      return Ok();
+      bool didSend = await emailService.SendEmailAsync("Master Colby", "birkheadc@gmail.com", "Test Email", "This is just a test! If you're seeing this, it worked!");
+      return didSend ? Ok() : StatusCode(9002);
     }
     catch
     {

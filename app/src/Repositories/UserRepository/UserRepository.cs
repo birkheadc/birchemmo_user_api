@@ -5,7 +5,7 @@ namespace BircheMmoUserApi.Repositories;
 
 public class UserRepository : IUserRepository
 {
-  public Task<UserModel> CreateUser(NewUserModel user)
+  public Task<UserModel?> CreateUser(NewUserModel user)
   {
     throw new NotImplementedException();
   }
@@ -25,12 +25,12 @@ public class UserRepository : IUserRepository
     throw new NotImplementedException();
   }
 
-  public Task<UserModel> FindUserById(ObjectId id)
+  public Task<UserModel?> FindUserById(ObjectId id)
   {
     throw new NotImplementedException();
   }
 
-  public Task<UserModel> FindUserByUsername(string username)
+  public Task<UserModel?> FindUserByUsername(string username)
   {
     throw new NotImplementedException();
   }

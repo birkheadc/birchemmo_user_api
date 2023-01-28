@@ -17,11 +17,12 @@ builder.Services.AddScoped<ISessionService, SessionService>();
 if (builder.Environment.IsDevelopment())
 {
   builder.Services.AddSingleton(
-    builder.Configuration.GetSection("EmailConfigNoReply").Get<EmailConfig>()
+    builder.Configuration.GetSection("EmailConfig").Get<EmailConfig>()
   );
   builder.Services.AddSingleton(
     builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>()
   );
+  Console.WriteLine(builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>().Key);
 }
 else
 {

@@ -9,9 +9,9 @@ namespace BircheMmoUserApi.Services;
 public interface IUserService
 {
   public Task<IEnumerable<UserModel>> GetAllUsers();
-  public Task<UserModel> GetUserByUsername(string username);
-  public Task<UserModel> GetUserById(ObjectId id);
-  public Task<UserModel> CreateUser(NewUserModel user);
+  public Task<UserModel?> GetUserByUsername(string username);
+  public Task<UserModel?> GetUserById(ObjectId id);
+  public Task<UserModel?> CreateUser(NewUserModel user);
   public Task DeleteUserById(ObjectId id);
   public Task EditUser(UserViewModel user);
 }

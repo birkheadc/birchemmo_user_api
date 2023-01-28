@@ -13,4 +13,13 @@ public record UserModel
   public string HashedPassword { get; set; } = "";
   public Role Role { get; set; } = Role.USER;
   public bool IsEmailVerified { get; set; }
+
+  public UserModel(ObjectId id, string username, string hashedPassword, Role role, bool isEmailVerified)
+  {
+    Id = id;
+    Username = username;
+    HashedPassword = hashedPassword;
+    Role = role;
+    IsEmailVerified = isEmailVerified;
+  }
 }

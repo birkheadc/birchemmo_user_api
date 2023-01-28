@@ -15,11 +15,11 @@ public class EmailConfig
   /// </summary>
   public EmailConfig()
   {
-    Name = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NOREPLY_NAME") ?? "";
-    Address = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NOREPLY_NAME") ?? "";
-    SmtpServer = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NOREPLY_NAME") ?? "";
-    Port = Int16.Parse(Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NOREPLY_NAME") ?? "0");
-    Username = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NOREPLY_NAME") ?? "";
-    Password = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NOREPLY_NAME") ?? "";
+    Name = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NAME") ?? "";
+    Address = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NAME") ?? "";
+    SmtpServer = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NAME") ?? "";
+    Port = Int16.Parse(Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NAME") ?? "0");
+    Username = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NAME") ?? "";
+    Password = Environment.GetEnvironmentVariable("ASPNETCORE_EMAILCONFIG_NAME") ?? "";
   }
 }

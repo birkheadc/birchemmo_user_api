@@ -13,9 +13,9 @@ public class UserService : IUserService
     this.userRepository = userRepository;
   }
 
-  public async Task<UserModel> CreateUser(NewUserModel user)
+  public async Task<UserModel?> CreateUser(NewUserModel user)
   {
-    UserModel userModel = await userRepository.CreateUser(user);
+    UserModel? userModel = await userRepository.CreateUser(user);
     return userModel;
   }
 
@@ -35,15 +35,15 @@ public class UserService : IUserService
     return users;
   }
 
-  public async Task<UserModel> GetUserById(ObjectId id)
+  public async Task<UserModel?> GetUserById(ObjectId id)
   {
-    UserModel user = await userRepository.FindUserById(id);
+    UserModel? user = await userRepository.FindUserById(id);
     return user;
   }
 
-  public async Task<UserModel> GetUserByUsername(string username)
+  public async Task<UserModel?> GetUserByUsername(string username)
   {
-    UserModel user = await userRepository.FindUserByUsername(username);
+    UserModel? user = await userRepository.FindUserByUsername(username);
     return user;
   }
 }
