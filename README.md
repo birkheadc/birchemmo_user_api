@@ -20,7 +20,7 @@ In production, I generally set the values through Docker, via a docker-compose f
 dotnet user-secrets set EmailConfigNoReply:Username {your email account's username}
 dotnet user-secrets set EmailConfigNoReply:Password {your email accounts password}
 
-dotnet user-secrets set JwtConfig:Key {a random string of at least n length, keep secret (I can't remember what n is...)}
+dotnet user-secrets set JwtConfig:Key {a random, secret string}
 ```
 
 ### Production

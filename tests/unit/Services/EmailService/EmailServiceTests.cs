@@ -15,7 +15,7 @@ public class EmailServiceTests
   }
 
   [Fact]
-  public async Task SendEmailAsync_ReturnsFalseWithBadConfig()
+  public async Task SendEmailAsync_Returns_False_With_Bad_Config()
   {
     EmailService service = new(new EmailConfigMock_BadData());
 

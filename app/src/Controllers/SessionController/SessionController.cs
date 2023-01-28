@@ -19,7 +19,9 @@ public class SessionController : ControllerBase
       {
         return StatusCode(9001);
       }
-      Credentials credentials = CredentialsDecoder.DecodeCredentialsFromBasic(basic);
+      CredentialsDecoder decoder = new();
+      Credentials? credentials = decoder.DecodeCredentialsFromBasic(basic);
+      if (credentials is null) return StatusCode(9003);
       return Ok("This should have been a token for: " + credentials.Username);
     }
     catch
