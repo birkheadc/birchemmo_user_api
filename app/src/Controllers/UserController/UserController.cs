@@ -19,7 +19,7 @@ public class UserController : ControllerBase
 
   [HttpGet]
   [Route("all")]
-  public async Task<IActionResult> GetAllUsers()
+  public async Task<ActionResult<IEnumerable<UserViewModel>>> GetAllUsers()
   {
     try
     {
@@ -34,7 +34,7 @@ public class UserController : ControllerBase
 
   [HttpGet]
   [Route("id/{id}")]
-  public async Task<IActionResult> GetUserById([FromRoute] ObjectId id)
+  public async Task<ActionResult<UserViewModel>> GetUserById([FromRoute] ObjectId id)
   {
     try
     {
@@ -50,7 +50,7 @@ public class UserController : ControllerBase
 
   [HttpPost]
   [Route("new")]
-  public async Task<IActionResult> CreateUser([FromBody] NewUserModel user)
+  public async Task<ActionResult<UserViewModel>> CreateUser([FromBody] NewUserModel user)
   {
     try
     {

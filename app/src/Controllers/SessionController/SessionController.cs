@@ -1,5 +1,6 @@
 using BircheMmoUserApi.Filters;
 using BircheMmoUserApi.Models;
+using BircheMmoUserApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BircheMmoUserApi.Controllers;
@@ -8,19 +9,20 @@ namespace BircheMmoUserApi.Controllers;
 [Route("api/session")]
 public class SessionController : ControllerBase
 {
+  private readonly ISessionService sessionService;
+
+  public SessionController(ISessionService sessionService)
+  {
+    this.sessionService = sessionService;
+  }
+
   [HttpGet]
   [BasicAuth]
   #pragma warning disable 1998
-  public async Task<IActionResult> GenerateSessionToken()
+  public async Task<ActionResult<SessionToken>> GenerateSessionToken([FromQuery] Credentials credentials)
   {
     try
     {
-      if (HttpContext.Request.Headers.TryGetValue("Authorization", out var basic) == false)
-      {
-        return StatusCode(9001);
-      }
-      CredentialsDecoder decoder = new();
-      Credentials? credentials = decoder.DecodeCredentialsFromBasic(basic);
       if (credentials is null) return StatusCode(9003);
       return Ok("This should have been a token for: " + credentials.Username);
     }

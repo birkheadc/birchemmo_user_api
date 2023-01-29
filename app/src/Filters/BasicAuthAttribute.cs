@@ -41,6 +41,7 @@ public class BasicAuthAttribute : Attribute, IAsyncActionFilter
     }
 
     // Allow access
+    context.ActionArguments["credentials"] = credentials;
     await next();
   }
 
