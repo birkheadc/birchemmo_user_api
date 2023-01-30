@@ -1,10 +1,18 @@
+using BircheMmoUserApi.Config;
 using BircheMmoUserApi.Models;
 using MongoDB.Bson;
 
 namespace BircheMmoUserApi.Repositories;
 
-public class UserRepository : IUserRepository
+public class MongoDbUserRepository : IUserRepository
 {
+  private readonly DbConfig dbConfig;
+
+  public MongoDbUserRepository(DbConfig dbConfig)
+  {
+    this.dbConfig = dbConfig;
+  }
+
   public Task<UserModel?> CreateUser(NewUserModel user)
   {
     throw new NotImplementedException();

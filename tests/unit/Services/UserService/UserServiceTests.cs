@@ -14,7 +14,7 @@ public class UserServiceTests
   [Fact]
   public void Service_Resolves()
   {
-    UserService userService = new(new UserRepository());
+    UserService userService = new(new MockUserRepository_ReturnsGoodData());
     
     Assert.NotNull(userService);
   }
