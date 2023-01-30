@@ -14,26 +14,21 @@ builder.Services.AddScoped<IUserViewService, UserViewService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 
-if (builder.Environment.IsDevelopment())
-{
-  builder.Services.AddSingleton(
-    builder.Configuration.GetSection("EmailConfig").Get<EmailConfig>()
-  );
-  builder.Services.AddSingleton(
-    builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>()
-  );
-  Console.WriteLine(builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>().Key);
-}
-else
-{
-  builder.Services.AddSingleton(
-    new EmailConfig()
-  );
-  builder.Services.AddSingleton(
-    new JwtConfig()
-  );
-}
+// Build Configs from appsettings / environment variables
 
+builder.Configuration.AddEnvironmentVariables();
+
+builder.Services.AddSingleton(
+  builder.Configuration.GetSection("EmailConfig").Get<EmailConfig>()
+);
+builder.Services.AddSingleton(
+  builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>()
+);
+builder.Services.AddSingleton(
+  builder.Configuration.GetSection("DbConfig").Get<DbConfig>()
+);
+
+Console.WriteLine(builder.Configuration.GetSection("DbConfig").Get<DbConfig>().DatabaseName);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -56,6 +51,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseCors("All");
+}
+
+if (app.Environment.IsStaging())
+{
+  app.UseSwagger();
+  app.UseSwaggerUI();
+  app.UseCors("All");
 }
 
 if (app.Environment.IsProduction())

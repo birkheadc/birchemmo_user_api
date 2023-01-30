@@ -27,6 +27,12 @@ public class EmailService : IEmailService
     return didSend;
   }
 
+  public void Test()
+  {
+    Console.WriteLine("Address: " + emailConfig.Address);
+    Console.WriteLine("Username: " + emailConfig.Username);    
+  }
+
   private MimeMessage CreateMimeMessage(EmailMessage message)
   {
     MimeMessage mimeMessage = new();

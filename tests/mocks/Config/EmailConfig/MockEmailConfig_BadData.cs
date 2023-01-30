@@ -3,9 +3,9 @@ using BircheMmoUserApi.Config;
 
 namespace BircheMmoUserApiTests.Mocks.Config;
 
-public class EmailConfigMock_BadData : EmailConfig
+public class MockEmailConfig_BadData : EmailConfig
 {
-  public EmailConfigMock_BadData()
+  public MockEmailConfig_BadData()
   {
     Name = "";
     Address = "";

@@ -29,4 +29,19 @@ public class DebugController : ControllerBase
       return StatusCode(9001);
     }
   }
+
+  [HttpPost]
+  [Route("test")]
+  public IActionResult Test()
+  {
+    try
+    {
+      emailService.Test();
+      return Ok();
+    }
+    catch
+    {
+      return StatusCode(9001);
+    }
+  }
 }
