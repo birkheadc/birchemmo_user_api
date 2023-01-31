@@ -13,7 +13,7 @@ public class MongoDbUserRepository : IUserRepository
     this.dbConfig = dbConfig;
   }
 
-  public Task<UserModel?> CreateUser(NewUserModel user)
+  public Task<UserModel?> CreateUser(UserModel user)
   {
     throw new NotImplementedException();
   }

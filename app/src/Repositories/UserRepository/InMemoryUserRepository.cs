@@ -10,18 +10,12 @@ public class InMemoryUserRepository : IUserRepository
 
   public InMemoryUserRepository()
   {
+    Console.WriteLine("In Memory User Repo Online...");
     users = new();
   }
-  public async Task<UserModel?> CreateUser(NewUserModel newUser)
+  public async Task<UserModel?> CreateUser(UserModel user)
   {
-    if (IsUsernameAvailable(newUser.Username) == false) return null;
-    UserModel user = new(
-      ObjectId.GenerateNewId(),
-      newUser.Username,
-      newUser.Password,
-      newUser.Role,
-      false
-    );
+    if (IsUsernameAvailable(user.Username) == false) return null;
     users.Add(user.Id, user);
     return user;
   }
@@ -33,14 +27,25 @@ public class InMemoryUserRepository : IUserRepository
 
   public async Task EditUser(UserViewModel user)
   {
-    if (users.ContainsKey(user.Id) == false) return;
-    users[user.Id].Username = user.Username;
-    users[user.Id].Role = user.Role;
-    users[user.Id].IsEmailVerified = user.IsEmailVerified;
+    if (users.ContainsKey(ObjectId.Parse(user.Id)) == false) return;
+    users[ObjectId.Parse(user.Id)].Username = user.Username;
+    users[ObjectId.Parse(user.Id)].Role = user.Role;
+    users[ObjectId.Parse(user.Id)].IsEmailVerified = user.IsEmailVerified;
   }
 
   public async Task<IEnumerable<UserModel>> FindAllUsers()
   {
+    foreach (UserModel user in users.Values)
+    {
+      Console.WriteLine("--------------------");
+      Console.WriteLine("ID: " + user.Id);
+      Console.WriteLine("Username: " + user.Username);
+      Console.WriteLine("HashedPassword: " + user.HashedPassword);
+      Console.WriteLine("Role: " + user.Role);
+      Console.WriteLine("IsEmailVerified: " + user.IsEmailVerified);
+      Console.WriteLine("--------------------");
+      Console.WriteLine("");
+    }
     return users.Values;
   }
 

@@ -10,7 +10,7 @@ using MongoDB.Bson;
 #pragma warning disable 1998
 public class MockUserRepository_ReturnsNull : IUserRepository
 {
-  public async Task<UserModel?> CreateUser(NewUserModel user)
+  public async Task<UserModel?> CreateUser(UserModel user)
   {
     return null;
   }

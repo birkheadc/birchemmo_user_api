@@ -54,15 +54,16 @@ public class InMemoryUserRepositoryTests
   {
     InMemoryUserRepository repository = new();
 
-    NewUserModel newUser = new(
+    ObjectId id = ObjectId.GenerateNewId();
+    UserModel newUser = new(
+      id,
       "oldcheddar",
       "passw0rd",
-      Role.ADMIN
+      Role.ADMIN,
+      false
     );
 
-    UserModel? _ = await repository.CreateUser(newUser);
-    Assert.NotNull(_);
-    ObjectId id = _.Id;
+    await repository.CreateUser(newUser);
 
     UserModel? user = await repository.FindUserById(id);
     Assert.NotNull(user);
@@ -76,10 +77,12 @@ public class InMemoryUserRepositoryTests
   {
     InMemoryUserRepository repository = new();
 
-    NewUserModel newUser = new(
+    UserModel newUser = new(
+      ObjectId.GenerateNewId(),
       username,
       "passw0rd",
-      role
+      role,
+      false
     );
 
     await repository.CreateUser(newUser);
@@ -95,19 +98,11 @@ public class InMemoryUserRepositoryTests
   [InlineData(3)]
   public async Task CreateUser_FindAllUsers_Returns_Set_Of_Those_Users(int numUsers)
   {
-    List<NewUserModel> newUsers = new();
-    for (int i = 0; i < numUsers; i++)
-    {
-      newUsers.Add(new(
-        "user_" + i.ToString(),
-        "passw0rd",
-        Role.USER
-      ));
-    }
+    List<UserModel> newUsers = GenerateListOfNUserModels(numUsers);
 
     InMemoryUserRepository repository = new();
 
-    foreach (NewUserModel newUser in newUsers)
+    foreach (UserModel newUser in newUsers)
     {
       await repository.CreateUser(newUser);
     }
@@ -129,24 +124,132 @@ public class InMemoryUserRepositoryTests
   [Fact]
   public async Task DeleteUserById_Removes_User_From_Database()
   {
-    // Todo
+    InMemoryUserRepository repository = new();
+
+    List<UserModel> newUsers = GenerateListOfNUserModels(3);
+
+    foreach (UserModel newUser in newUsers)
+    {
+      await repository.CreateUser(newUser);
+    }
+
+    List<UserModel> users = new();
+    users.AddRange(await repository.FindAllUsers());
+
+    Assert.True(users.Count == 3);
+
+    await repository.DeleteUserById(users[0].Id);
+
+    users = new();
+    users.AddRange(await repository.FindAllUsers());
+
+    Assert.True(users.Count == 2);
   }
 
   [Fact]
   public async Task DeleteUserByID_Does_Nothing_If_Id_Not_Found()
   {
-    // Todo
+    InMemoryUserRepository repository = new();
+
+    List<UserModel> newUsers = GenerateListOfNUserModels(3);
+
+    foreach (UserModel newUser in newUsers)
+    {
+      await repository.CreateUser(newUser);
+    }
+
+    List<UserModel> users = new();
+    users.AddRange(await repository.FindAllUsers());
+
+    Assert.True(users.Count == 3);
+
+    await repository.DeleteUserById(ObjectId.Empty);
+
+    users = new();
+    users.AddRange(await repository.FindAllUsers());
+
+    Assert.True(users.Count == 3);
   }
 
   [Fact]
   public async Task EditUser_Updates_Values()
   {
-    // Todo
+    InMemoryUserRepository repository = new();
+    
+    ObjectId id = ObjectId.GenerateNewId();
+    UserModel newUser = new(
+      id,
+      "oldcheddar",
+      "passw0rd",
+      Role.ADMIN,
+      false
+    );
+
+    await repository.CreateUser(newUser);
+
+    UserModel? userModel = await repository.FindUserById(id);
+
+    Assert.NotNull(userModel);
+    Assert.Equal(userModel.Username, "oldcheddar");
+    Assert.Equal(userModel.Role, Role.ADMIN);
+
+    UserViewModel editUser = new(
+      id.ToString(),
+      "newcheddar",
+      Role.USER,
+      false
+    );
+    await repository.EditUser(editUser);
+
+    userModel = await repository.FindUserByUsername("oldcheddar");
+    Assert.Null(userModel);
+
+    userModel = await repository.FindUserById(id);
+    Assert.NotNull(userModel);
+    Assert.Equal(userModel.Username, "newcheddar");
+    Assert.Equal(userModel.Role, Role.USER);
   }
 
   [Fact]
   public async Task EditUser_Does_Nothing_If_User_Not_Found()
   {
-    // Todo
+    InMemoryUserRepository repository = new();
+    
+    UserModel newUser = new(
+      ObjectId.GenerateNewId(),
+      "oldcheddar",
+      "passw0rd",
+      Role.ADMIN,
+      false
+    );
+
+    await repository.CreateUser(newUser);
+
+    UserViewModel editUser = new(
+      ObjectId.Empty.ToString(),
+      "newcheddar",
+      Role.USER,
+      false
+    );
+    await repository.EditUser(editUser);
+
+    UserModel? user = await repository.FindUserByUsername("oldcheddar");
+    Assert.NotNull(user);
+  }
+
+  private List<UserModel> GenerateListOfNUserModels(int n)
+  {
+    List<UserModel> users = new();
+    for (int i = 0; i < n; i++)
+    {
+      users.Add(new(
+        ObjectId.GenerateNewId(),
+        "user_" + i.ToString(),
+        "passw0rd",
+        Role.USER,
+        false
+      ));
+    }
+    return users;
   }
 }

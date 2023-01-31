@@ -7,12 +7,12 @@ namespace BircheMmoUserApi.Models;
 /// </summary>
 public record UserViewModel
 {
-  public ObjectId Id { get; set; }
+  public string Id { get; set; }
   public string Username { get; set; } = "";
   public Role Role { get; set; } = Role.USER;
   public bool IsEmailVerified { get; set; }
 
-  public UserViewModel(ObjectId id, string username, Role role, bool isEmailVerified)
+  public UserViewModel(string id, string username, Role role, bool isEmailVerified)
   {
     Id = id;
     Username = username;

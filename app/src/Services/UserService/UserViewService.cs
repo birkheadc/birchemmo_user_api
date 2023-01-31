@@ -34,9 +34,9 @@ public class UserViewService : IUserViewService
     return ToViewModel(userModels);
   }
 
-  public async Task<UserViewModel?> GetUserById(ObjectId id)
+  public async Task<UserViewModel?> GetUserById(string id)
   {
-    UserModel? userModel = await userService.GetUserById(id);
+    UserModel? userModel = await userService.GetUserById(ObjectId.Parse(id));
     return ToViewModel(userModel);
   }
 
@@ -51,7 +51,7 @@ public class UserViewService : IUserViewService
     if (userModel is null) return null;
     return new UserViewModel
     (
-      userModel.Id,
+      userModel.Id.ToString(),
       userModel.Username,
       userModel.Role,
       userModel.IsEmailVerified

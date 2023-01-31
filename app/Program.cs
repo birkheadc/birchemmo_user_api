@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserViewService, UserViewService>();
-builder.Services.AddScoped<IUserRepository, InMemoryUserRepository>();
+builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 
 // Build Configs from appsettings / environment variables
@@ -27,8 +27,6 @@ builder.Services.AddSingleton(
 builder.Services.AddSingleton(
   builder.Configuration.GetSection("DbConfig").Get<DbConfig>()
 );
-
-Console.WriteLine(builder.Configuration.GetSection("DbConfig").Get<DbConfig>().DatabaseName);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

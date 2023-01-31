@@ -43,7 +43,7 @@ public class UserViewServiceTests
   {
     UserViewService service = new(new MockUserService_ReturnsGoodData());
 
-    UserViewModel? user = await service.GetUserById(ObjectId.Empty);
+    UserViewModel? user = await service.GetUserById(ObjectId.Empty.ToString());
 
     Assert.Null(user);
   }

@@ -13,7 +13,14 @@ public class MockUserService_ReturnsGoodData : IUserService
   private readonly IUserRepository repository = new MockUserRepository_ReturnsGoodData();
   public async Task<UserModel?> CreateUser(NewUserModel user)
   {
-    return await repository.CreateUser(user);
+    UserModel userModel = new(
+      ObjectId.GenerateNewId(),
+      user.Username,
+      HashPassword(user.Password),
+      user.Role,
+      false
+    );
+    return await repository.CreateUser(userModel);
   }
 
   public async Task DeleteUserById(ObjectId id)
@@ -39,5 +46,10 @@ public class MockUserService_ReturnsGoodData : IUserService
   public async Task<UserModel?> GetUserByUsername(string username)
   {
     return await repository.FindUserByUsername(username);
+  }
+
+  private string HashPassword(string password)
+  {
+    return BCrypt.Net.BCrypt.HashPassword(password);
   }
 }

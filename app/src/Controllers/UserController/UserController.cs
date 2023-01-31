@@ -34,7 +34,7 @@ public class UserController : ControllerBase
 
   [HttpGet]
   [Route("id/{id}")]
-  public async Task<ActionResult<UserViewModel>> GetUserById([FromRoute] ObjectId id)
+  public async Task<ActionResult<UserViewModel>> GetUserById([FromRoute] string id)
   {
     try
     {

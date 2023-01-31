@@ -50,7 +50,7 @@ public class UserControllerTests
   public async Task GetUserById_Returns_NotFound_When_Empty()
   {
     UserController controller = new(GetUserViewService_ReturnsNull());
-    NotFoundResult? result = (await controller.GetUserById(ObjectId.Empty)).Result as NotFoundResult;
+    NotFoundResult? result = (await controller.GetUserById(ObjectId.Empty.ToString())).Result as NotFoundResult;
     Assert.NotNull(result);
   }
 
@@ -58,7 +58,7 @@ public class UserControllerTests
   public async Task GetUserById_Returns_NotFound_When_Not_Exist()
   {
     UserController controller = new(GetUserViewService_ReturnsGoodData());
-    NotFoundResult? result = (await controller.GetUserById(ObjectId.Empty)).Result as NotFoundResult;
+    NotFoundResult? result = (await controller.GetUserById(ObjectId.Empty.ToString())).Result as NotFoundResult;
     Assert.NotNull(result);
   }
 
@@ -66,10 +66,10 @@ public class UserControllerTests
   public async Task GetUserById_Returns_User_When_Exist()
   {
     UserViewService service = (UserViewService)GetUserViewService_ReturnsGoodData();
-    ObjectId id = ((List<UserViewModel>)await service.GetAllUsers())[0].Id;
+    ObjectId id = ObjectId.Parse(((List<UserViewModel>)await service.GetAllUsers())[0].Id);
 
     UserController controller = new(service);
-    OkObjectResult? result = (await controller.GetUserById(id)).Result as OkObjectResult;
+    OkObjectResult? result = (await controller.GetUserById(id.ToString())).Result as OkObjectResult;
     Assert.NotNull(result);
 
     UserViewModel? user = result.Value as UserViewModel;

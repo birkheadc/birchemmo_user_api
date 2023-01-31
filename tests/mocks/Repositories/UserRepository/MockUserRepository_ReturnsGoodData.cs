@@ -43,7 +43,7 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
       false
     ));
   }
-  public Task<UserModel?> CreateUser(NewUserModel user)
+  public Task<UserModel?> CreateUser(UserModel user)
   {
     throw new System.NotImplementedException();
   }

@@ -15,7 +15,8 @@ public class UserService : IUserService
 
   public async Task<UserModel?> CreateUser(NewUserModel user)
   {
-    UserModel? userModel = await userRepository.CreateUser(user);
+    UserModel userModel = ToUserModel(user);
+    UserModel? returnUser = await userRepository.CreateUser(userModel);
     return userModel;
   }
 
@@ -45,5 +46,23 @@ public class UserService : IUserService
   {
     UserModel? user = await userRepository.FindUserByUsername(username);
     return user;
+  }
+
+  private UserModel ToUserModel(NewUserModel newUserModel)
+  {
+    UserModel userModel = new(
+      ObjectId.GenerateNewId(),
+      newUserModel.Username,
+      HashPassword(newUserModel.Password),
+      newUserModel.Role,
+      false
+    );
+
+    return userModel;
+  }
+
+  private string HashPassword(string password)
+  {
+    return BCrypt.Net.BCrypt.HashPassword(password);
   }
 }
