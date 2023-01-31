@@ -25,7 +25,7 @@ public class SessionController : ControllerBase
     {
       if (credentials is null) return StatusCode(9003);
       SessionToken? token = await sessionService.GenerateSessionToken(credentials);
-      return token is null ? Forbid() : Ok(token);
+      return token is null ? Unauthorized() : Ok(token);
     }
     catch
     {
