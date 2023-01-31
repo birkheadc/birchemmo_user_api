@@ -50,6 +50,47 @@ public class InMemoryUserRepositoryTests
   }
 
   [Fact]
+  public async Task CreateUser_Returns_Null_If_Username_Clash()
+  {
+    InMemoryUserRepository repository = new();
+
+    UserModel newUser = new(
+      ObjectId.GenerateNewId(),
+      "oldcheddar",
+      "password",
+      Role.USER,
+      false
+    );
+
+    UserModel? model = await repository.CreateUser(newUser);
+    Assert.NotNull(model);
+
+    model = await repository.CreateUser(newUser);
+    Assert.Null(model);
+  }
+
+  [Fact]
+  public async Task CreateUser_Does_Not_Create_If_Username_Clash()
+  {
+    InMemoryUserRepository repository = new();
+
+    UserModel newUser = new(
+      ObjectId.GenerateNewId(),
+      "oldcheddar",
+      "password",
+      Role.USER,
+      false
+    );
+
+    await repository.CreateUser(newUser);
+    await repository.CreateUser(newUser);
+    
+    List<UserModel> users = new();
+    users.AddRange(await repository.FindAllUsers());
+    Assert.True(users.Count == 1);
+  }
+
+  [Fact]
   public async Task CreateUser_FindUserById_Returns_Created_User()
   {
     InMemoryUserRepository repository = new();

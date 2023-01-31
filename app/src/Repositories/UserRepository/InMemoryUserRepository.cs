@@ -4,6 +4,11 @@ using MongoDB.Bson;
 namespace BircheMmoUserApi.Repositories;
 
 #pragma warning disable 1998
+/// <summary>
+/// <c>InMemoryUserRepository</c> should only be used in development and testing.
+/// It acts as a quick and dirty database for Users.
+/// Make sure to register it as a Singleton, because the "database" will be lost upon reinstantiation.
+///</summary>
 public class InMemoryUserRepository : IUserRepository
 {
   private Dictionary<ObjectId, UserModel> users;

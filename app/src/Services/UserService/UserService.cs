@@ -17,7 +17,7 @@ public class UserService : IUserService
   {
     UserModel userModel = ToUserModel(user);
     UserModel? returnUser = await userRepository.CreateUser(userModel);
-    return userModel;
+    return returnUser;
   }
 
   public async Task DeleteUserById(ObjectId id)
