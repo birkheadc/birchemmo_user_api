@@ -19,7 +19,7 @@ public class SessionController : ControllerBase
   [HttpGet]
   [ExtractBasicAuth]
   #pragma warning disable 1998
-  public async Task<ActionResult<SessionToken>> GenerateSessionToken([FromQuery] Credentials credentials)
+  public async Task<ActionResult<SessionToken>> GenerateSessionToken([FromQuery] Credentials? credentials)
   {
     try
     {

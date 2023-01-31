@@ -82,7 +82,12 @@ public class SessionServiceTests
       new MockJwtConfig_GoodData()
     );
     
-    
+    // SessionToken badToken = new SessionToken("eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2Q4ZTM5NDc4NzY2NDAxNTAzMjZjM2IiLCJuYmYiOjE2NzUxNTg0NzUsImV4cCI6MTY3NTE1ODUzNSwiaWF0IjoxNjc1MTU4NDc1LCJpc3MiOiJiaXJjaGVnYW1lcy5jb20iLCJhdWQiOiJiaXJjaGVnYW1lcy5jb21URVNUIn0.CJbCUxDng92waygvQBx9mXGdKurVfljGevjg9Bfm06PUQMGcLPWbiYz9gWIMduiqalB4rd6mJp4EwaSHFgC-yQ");
+    SessionToken badToken = new("bad_token");
+
+    UserModel? user = await service.ValidateSessionToken(badToken);
+
+    Assert.Null(user);
   }
 
   [Fact]
@@ -98,7 +103,18 @@ public class SessionServiceTests
       new MockJwtConfig_GoodData()
     );
 
+    SessionToken? goodToken = await service.GenerateSessionToken(
+      new Credentials(
+        username,
+        password
+      )
+    );
 
+    Assert.NotNull(goodToken);
+
+    UserModel? user = await service.ValidateSessionToken(goodToken);
+    Assert.NotNull(user);
+    Assert.Equal(username, user.Username);
   }
 
   private async Task<InMemoryUserRepository> GetInMemoryUserRepositoryWithUserAndPassword(string username, string password)

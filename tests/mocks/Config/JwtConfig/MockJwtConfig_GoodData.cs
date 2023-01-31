@@ -10,6 +10,6 @@ public class MockJwtConfig_GoodData : JwtConfig
     Issuer = "birchegames.mock";
     Audience = "birchegames.mock";
     Key = "woeiruqfjsdov8sdf8igjnuq93u98uofb8isufasidfuia8wojfo3jfias";
-    Expires = TimeSpan.FromMinutes(1);
+    Expires = TimeSpan.FromSeconds(30);
   }
 }
