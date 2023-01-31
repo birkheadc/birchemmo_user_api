@@ -1,45 +1,60 @@
 using BircheMmoUserApi.Config;
 using BircheMmoUserApi.Models;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace BircheMmoUserApi.Repositories;
 
 public class MongoDbUserRepository : IUserRepository
 {
-  private readonly DbConfig dbConfig;
+  private readonly IMongoCollection<UserModel> userCollection;
 
   public MongoDbUserRepository(DbConfig dbConfig)
   {
-    this.dbConfig = dbConfig;
+    MongoClient mongoClient = new(dbConfig.ConnectionString);
+    IMongoDatabase database = mongoClient.GetDatabase(dbConfig.DatabaseName);
+    userCollection = database.GetCollection<UserModel>(dbConfig.UserCollectionName);
   }
 
-  public Task<UserModel?> CreateUser(UserModel user)
+  public async Task<UserModel?> CreateUser(UserModel user)
   {
-    throw new NotImplementedException();
+    try
+    {
+      await userCollection.InsertOneAsync(user);
+      return user;
+    }
+    catch
+    {
+      return null;
+    }
   }
 
-  public Task DeleteUserById(ObjectId id)
+  public async Task DeleteUserById(ObjectId id)
   {
-    throw new NotImplementedException();
+    await userCollection.DeleteOneAsync(user => user.Id == id);
   }
 
-  public Task EditUser(UserViewModel user)
+  public async Task EditUser(UserViewModel user)
   {
-    throw new NotImplementedException();
+    var updateDefinition = Builders<UserModel>.Update
+      .Set(u => u.Username, user.Username)
+      .Set(u => u.Role, user.Role)
+      .Set(u => u.IsEmailVerified, user.IsEmailVerified);
+    await userCollection.UpdateOneAsync(u => u.Id == ObjectId.Parse(user.Id), updateDefinition);
   }
 
-  public Task<IEnumerable<UserModel>> FindAllUsers()
+  public async Task<IEnumerable<UserModel>> FindAllUsers()
   {
-    throw new NotImplementedException();
+    return await (await userCollection.FindAsync(_ => true)).ToListAsync();
   }
 
-  public Task<UserModel?> FindUserById(ObjectId id)
+  public async Task<UserModel?> FindUserById(ObjectId id)
   {
-    throw new NotImplementedException();
+    return await (await userCollection.FindAsync(user => user.Id == id)).FirstOrDefaultAsync();
   }
 
-  public Task<UserModel?> FindUserByUsername(string username)
+  public async Task<UserModel?> FindUserByUsername(string username)
   {
-    throw new NotImplementedException();
+    return await (await userCollection.FindAsync(user => user.Username == username)).FirstOrDefaultAsync();
   }
 }

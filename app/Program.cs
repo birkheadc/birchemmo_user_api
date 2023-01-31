@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserViewService, UserViewService>();
-builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
+builder.Services.AddSingleton<IUserRepository, MongoDbUserRepository>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 
 // Build Configs from appsettings / environment variables
