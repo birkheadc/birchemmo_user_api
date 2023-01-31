@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace BircheMmoUserApi.Filters;
 
-public class BasicAuthAttribute : Attribute, IAsyncActionFilter
+public class ExtractBasicAuthAttribute : Attribute, IAsyncActionFilter
 {
   public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
   {
@@ -31,14 +31,6 @@ public class BasicAuthAttribute : Attribute, IAsyncActionFilter
       context.Result = new UnauthorizedResult();
       return;
     }
-    IUserService userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-    UserModel? user = await userService.GetUserByUsername(credentials.Username);
-    
-    if (AreCredentialsValid(user, credentials) == false)
-    {
-      context.Result = new UnauthorizedResult();
-      return;
-    }
 
     // Allow access
     context.ActionArguments["credentials"] = credentials;
@@ -49,11 +41,5 @@ public class BasicAuthAttribute : Attribute, IAsyncActionFilter
   {
     CredentialsDecoder decoder = new();
     return decoder.DecodeCredentialsFromBasic(basic);
-  }
-
-  private bool AreCredentialsValid(UserModel? user, Credentials credentials)
-  {
-    if (user is null) return false;
-    return BCrypt.Net.BCrypt.Verify(credentials.Password, user.HashedPassword);
   }
 }

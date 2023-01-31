@@ -17,14 +17,15 @@ public class SessionController : ControllerBase
   }
 
   [HttpGet]
-  [BasicAuth]
+  [ExtractBasicAuth]
   #pragma warning disable 1998
   public async Task<ActionResult<SessionToken>> GenerateSessionToken([FromQuery] Credentials credentials)
   {
     try
     {
       if (credentials is null) return StatusCode(9003);
-      return Ok("This should have been a token for: " + credentials.Username);
+      SessionToken? token = await sessionService.GenerateSessionToken(credentials);
+      return token is null ? Forbid() : Ok(token);
     }
     catch
     {

@@ -15,11 +15,10 @@ public class CredentialsDecoder
 
       int i = decodedCredentials.IndexOf(':');
 
-      return new Credentials()
-      {
-        Username = decodedCredentials.Substring(0, i),
-        Password = decodedCredentials.Substring(i + 1)
-      };
+      return new Credentials(
+        decodedCredentials.Substring(0, i),
+        decodedCredentials.Substring(i + 1)
+      );
     }
     catch
     {
