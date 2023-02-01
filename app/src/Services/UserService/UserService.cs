@@ -52,9 +52,10 @@ public class UserService : IUserService
   {
     UserModel userModel = new(
       ObjectId.GenerateNewId(),
-      newUserModel.Username,
+      newUserModel.UserDetails.Username,
       HashPassword(newUserModel.Password),
-      newUserModel.Role,
+      newUserModel.UserDetails.EmailAddress,
+      newUserModel.UserDetails.Role,
       false
     );
 

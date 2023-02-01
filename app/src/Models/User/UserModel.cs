@@ -8,18 +8,20 @@ namespace BircheMmoUserApi.Models;
 /// </summary>
 public record UserModel
 {
+  public UserDetails UserDetails { get; set; }
   public ObjectId Id { get; set; }
-  public string Username { get; set; } = "";
-  public string HashedPassword { get; set; } = "";
-  public Role Role { get; set; } = Role.USER;
+  public string HashedPassword { get; set; }
   public bool IsEmailVerified { get; set; }
 
-  public UserModel(ObjectId id, string username, string hashedPassword, Role role, bool isEmailVerified)
+  public UserModel(ObjectId id, string username, string hashedPassword, string emailAddress, Role role, bool isEmailVerified)
   {
+    UserDetails = new(
+      username,
+      emailAddress,
+      role
+    );
     Id = id;
-    Username = username;
     HashedPassword = hashedPassword;
-    Role = role;
     IsEmailVerified = isEmailVerified;
   }
 }

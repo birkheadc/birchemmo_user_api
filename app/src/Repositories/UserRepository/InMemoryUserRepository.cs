@@ -20,7 +20,7 @@ public class InMemoryUserRepository : IUserRepository
   }
   public async Task<UserModel?> CreateUser(UserModel user)
   {
-    if (IsUsernameAvailable(user.Username) == false) return null;
+    if (IsUsernameAvailable(user.UserDetails.Username) == false) return null;
     users.Add(user.Id, user);
     return user;
   }
@@ -33,8 +33,8 @@ public class InMemoryUserRepository : IUserRepository
   public async Task EditUser(UserViewModel user)
   {
     if (users.ContainsKey(ObjectId.Parse(user.Id)) == false) return;
-    users[ObjectId.Parse(user.Id)].Username = user.Username;
-    users[ObjectId.Parse(user.Id)].Role = user.Role;
+    users[ObjectId.Parse(user.Id)].UserDetails.Username = user.UserDetails.Username;
+    users[ObjectId.Parse(user.Id)].UserDetails.Role = user.UserDetails.Role;
     users[ObjectId.Parse(user.Id)].IsEmailVerified = user.IsEmailVerified;
   }
 
@@ -44,9 +44,9 @@ public class InMemoryUserRepository : IUserRepository
     {
       Console.WriteLine("--------------------");
       Console.WriteLine("ID: " + user.Id);
-      Console.WriteLine("Username: " + user.Username);
+      Console.WriteLine("Username: " + user.UserDetails.Username);
       Console.WriteLine("HashedPassword: " + user.HashedPassword);
-      Console.WriteLine("Role: " + user.Role);
+      Console.WriteLine("Role: " + user.UserDetails.Role);
       Console.WriteLine("IsEmailVerified: " + user.IsEmailVerified);
       Console.WriteLine("--------------------");
       Console.WriteLine("");
@@ -70,7 +70,7 @@ public class InMemoryUserRepository : IUserRepository
   {
     try
     {
-      return users.Where(user => user.Value.Username == username).First().Value;
+      return users.Where(user => user.Value.UserDetails.Username == username).First().Value;
     }
     catch
     {
@@ -82,7 +82,7 @@ public class InMemoryUserRepository : IUserRepository
   {
     foreach (KeyValuePair<ObjectId, UserModel> pair in users)
     {
-      if (pair.Value.Username == username) return false;
+      if (pair.Value.UserDetails.Username == username) return false;
     }
     return true;
   }

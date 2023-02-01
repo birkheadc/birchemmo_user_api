@@ -18,6 +18,7 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
       ObjectId.GenerateNewId(),
       "user_1",
       BCrypt.Net.BCrypt.HashPassword("hashasdfasdfedpassword"),
+      "test@test.com",
       Role.ADMIN,
       true
     ));
@@ -25,6 +26,7 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
       ObjectId.GenerateNewId(),
       "user_2",
       BCrypt.Net.BCrypt.HashPassword("hashedpassasdfasdword"),
+      "example@example.com",
       Role.USER,
       true
     ));
@@ -32,6 +34,7 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
       ObjectId.GenerateNewId(),
       "user_3",
       BCrypt.Net.BCrypt.HashPassword("hasheasdfasddpassword"),
+      "user@place.extension",
       Role.USER,
       true
     ));
@@ -39,6 +42,7 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
       ObjectId.GenerateNewId(),
       "user_4",
       BCrypt.Net.BCrypt.HashPassword("hashedpasasdfasdsword"),
+      "user_4@my.site",
       Role.USER,
       false
     ));
@@ -79,7 +83,7 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
   {
     try
     {
-      return users.Find(u => u.Username == username);
+      return users.Find(u => u.UserDetails.Username == username);
     }
     catch (ArgumentNullException)
     {

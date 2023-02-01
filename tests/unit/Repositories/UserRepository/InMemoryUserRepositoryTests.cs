@@ -58,6 +58,7 @@ public class InMemoryUserRepositoryTests
       ObjectId.GenerateNewId(),
       "oldcheddar",
       "password",
+      "oldcheddar@site.com",
       Role.USER,
       false
     );
@@ -78,6 +79,7 @@ public class InMemoryUserRepositoryTests
       ObjectId.GenerateNewId(),
       "oldcheddar",
       "password",
+      "oldcheddar@site.com",
       Role.USER,
       false
     );
@@ -100,6 +102,7 @@ public class InMemoryUserRepositoryTests
       id,
       "oldcheddar",
       "passw0rd",
+      "oldcheddar@site.com",
       Role.ADMIN,
       false
     );
@@ -108,7 +111,7 @@ public class InMemoryUserRepositoryTests
 
     UserModel? user = await repository.FindUserById(id);
     Assert.NotNull(user);
-    Assert.Equal(newUser.Username, user.Username);
+    Assert.Equal(newUser.UserDetails.Username, user.UserDetails.Username);
   }
 
   [Theory]
@@ -122,6 +125,7 @@ public class InMemoryUserRepositoryTests
       ObjectId.GenerateNewId(),
       username,
       "passw0rd",
+      username + "@place.com",
       role,
       false
     );
@@ -130,7 +134,7 @@ public class InMemoryUserRepositoryTests
 
     UserModel? user = await repository.FindUserByUsername(username);
     Assert.NotNull(user);
-    Assert.Equal(newUser.Username, user.Username);
+    Assert.Equal(newUser.UserDetails.Username, user.UserDetails.Username);
   }
 
   [Theory]
@@ -157,7 +161,7 @@ public class InMemoryUserRepositoryTests
     for (int i = 0; i < numUsers; i++)
     {
       Assert.NotNull(
-        users.Find(user => user.Username == newUsers[i].Username)
+        users.Find(user => user.UserDetails.Username == newUsers[i].UserDetails.Username)
       );
     }
   }
@@ -222,6 +226,7 @@ public class InMemoryUserRepositoryTests
       id,
       "oldcheddar",
       "passw0rd",
+      "oldcheddar@site.com",
       Role.ADMIN,
       false
     );
@@ -231,12 +236,13 @@ public class InMemoryUserRepositoryTests
     UserModel? userModel = await repository.FindUserById(id);
 
     Assert.NotNull(userModel);
-    Assert.Equal(userModel.Username, "oldcheddar");
-    Assert.Equal(userModel.Role, Role.ADMIN);
+    Assert.Equal(userModel.UserDetails.Username, "oldcheddar");
+    Assert.Equal(userModel.UserDetails.Role, Role.ADMIN);
 
     UserViewModel editUser = new(
       id.ToString(),
       "newcheddar",
+      "newcheddar@site.com",
       Role.USER,
       false
     );
@@ -247,8 +253,8 @@ public class InMemoryUserRepositoryTests
 
     userModel = await repository.FindUserById(id);
     Assert.NotNull(userModel);
-    Assert.Equal(userModel.Username, "newcheddar");
-    Assert.Equal(userModel.Role, Role.USER);
+    Assert.Equal(userModel.UserDetails.Username, "newcheddar");
+    Assert.Equal(userModel.UserDetails.Role, Role.USER);
   }
 
   [Fact]
@@ -260,6 +266,7 @@ public class InMemoryUserRepositoryTests
       ObjectId.GenerateNewId(),
       "oldcheddar",
       "passw0rd",
+      "oldcheddar@site.com",
       Role.ADMIN,
       false
     );
@@ -269,6 +276,7 @@ public class InMemoryUserRepositoryTests
     UserViewModel editUser = new(
       ObjectId.Empty.ToString(),
       "newcheddar",
+      "newcheddar@site.com",
       Role.USER,
       false
     );
@@ -287,6 +295,7 @@ public class InMemoryUserRepositoryTests
         ObjectId.GenerateNewId(),
         "user_" + i.ToString(),
         "passw0rd",
+        "user_" + i.ToString() + "@site.com",
         Role.USER,
         false
       ));

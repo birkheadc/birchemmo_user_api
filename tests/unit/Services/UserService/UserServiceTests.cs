@@ -81,7 +81,7 @@ public class UserServiceTests
     List<UserModel> users = new();
     users.AddRange(await userService.GetAllUsers());
 
-    UserModel? user = await userService.GetUserByUsername(users[0].Username);
+    UserModel? user = await userService.GetUserByUsername(users[0].UserDetails.Username);
 
     Assert.NotNull(user);
     Assert.True(user is not null && users[0].Id == user.Id);

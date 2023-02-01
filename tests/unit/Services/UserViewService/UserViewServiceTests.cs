@@ -80,7 +80,7 @@ public class UserViewServiceTests
     List<UserViewModel> users = new();
     users.AddRange(await service.GetAllUsers());
 
-    UserViewModel? user = await service.GetUserByUsername(users[0].Username);
+    UserViewModel? user = await service.GetUserByUsername(users[0].UserDetails.Username);
 
     Assert.NotNull(user);
     Assert.True(user is not null && users[0].Id == user.Id);

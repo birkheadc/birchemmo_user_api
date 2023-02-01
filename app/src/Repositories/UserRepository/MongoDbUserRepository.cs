@@ -37,8 +37,8 @@ public class MongoDbUserRepository : IUserRepository
   public async Task EditUser(UserViewModel user)
   {
     var updateDefinition = Builders<UserModel>.Update
-      .Set(u => u.Username, user.Username)
-      .Set(u => u.Role, user.Role)
+      .Set(u => u.UserDetails.Username, user.UserDetails.Username)
+      .Set(u => u.UserDetails.Role, user.UserDetails.Role)
       .Set(u => u.IsEmailVerified, user.IsEmailVerified);
     await userCollection.UpdateOneAsync(u => u.Id == ObjectId.Parse(user.Id), updateDefinition);
   }
@@ -55,6 +55,6 @@ public class MongoDbUserRepository : IUserRepository
 
   public async Task<UserModel?> FindUserByUsername(string username)
   {
-    return await (await userCollection.FindAsync(user => user.Username == username)).FirstOrDefaultAsync();
+    return await (await userCollection.FindAsync(user => user.UserDetails.Username == username)).FirstOrDefaultAsync();
   }
 }

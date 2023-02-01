@@ -1,4 +1,5 @@
 # TODO
+- Make EmailAddress unique
 - Add EmailAddress to UserModel
 - Build session token authorization
 - Add authorization to endpoints that need it

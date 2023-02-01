@@ -114,7 +114,7 @@ public class SessionServiceTests
 
     UserModel? user = await service.ValidateSessionToken(goodToken);
     Assert.NotNull(user);
-    Assert.Equal(username, user.Username);
+    Assert.Equal(username, user.UserDetails.Username);
   }
 
   private async Task<InMemoryUserRepository> GetInMemoryUserRepositoryWithUserAndPassword(string username, string password)
@@ -126,6 +126,7 @@ public class SessionServiceTests
       ObjectId.GenerateNewId(),
       username,
       BCrypt.Net.BCrypt.HashPassword(password),
+      username + "@site.com",
       Role.USER,
       false
     ));

@@ -52,8 +52,9 @@ public class UserViewService : IUserViewService
     return new UserViewModel
     (
       userModel.Id.ToString(),
-      userModel.Username,
-      userModel.Role,
+      userModel.UserDetails.Username,
+      userModel.UserDetails.EmailAddress,
+      userModel.UserDetails.Role,
       userModel.IsEmailVerified
     );
   }
