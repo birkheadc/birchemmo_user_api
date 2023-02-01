@@ -13,5 +13,6 @@ public interface IUserService
   public Task<UserModel?> GetUserById(ObjectId id);
   public Task<UserModel?> CreateUser(NewUserModel user);
   public Task DeleteUserById(ObjectId id);
-  public Task EditUser(UserViewModel user);
+  public Task UpdateUser(UserViewModel user);
+  public Task UpdateUser(UserModel user);
 }

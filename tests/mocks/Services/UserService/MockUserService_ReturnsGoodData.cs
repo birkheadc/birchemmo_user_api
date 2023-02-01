@@ -29,9 +29,9 @@ public class MockUserService_ReturnsGoodData : IUserService
     await repository.DeleteUserById(id);
   }
 
-  public async Task EditUser(UserViewModel user)
+  public async Task Update(UserViewModel user)
   {
-    await repository.EditUser(user);
+    await repository.UpdateUser(user);
   }
 
   public async Task<IEnumerable<UserModel>> GetAllUsers()
@@ -52,5 +52,15 @@ public class MockUserService_ReturnsGoodData : IUserService
   private string HashPassword(string password)
   {
     return BCrypt.Net.BCrypt.HashPassword(password);
+  }
+
+  public Task UpdateUser(UserViewModel user)
+  {
+    throw new System.NotImplementedException();
+  }
+
+  public Task UpdateUser(UserModel user)
+  {
+    throw new System.NotImplementedException();
   }
 }

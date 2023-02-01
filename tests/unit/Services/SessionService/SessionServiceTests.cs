@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using BircheMmoUserApi.Models;
 using BircheMmoUserApi.Repositories;
 using BircheMmoUserApi.Services;
-using BircheMmoUserApiTests.Mocks.Repositories;
+using BircheMmoUserApiTests.Mocks.Services;
 using BircheMmoUserApiTests.Mocks.Config;
 using MongoDB.Bson;
 using Xunit;
@@ -16,8 +16,8 @@ public class SessionServiceTests
   public void Service_Resolves()
   {
     SessionService service = new(
-      new MockUserRepository_ReturnsGoodData(),
-      new MockJwtConfig_GoodData()
+      new MockUserService_ReturnsGoodData(),
+      GetJwtTokenService()
     );
 
     Assert.NotNull(service);
@@ -29,16 +29,16 @@ public class SessionServiceTests
     string username = "oldcheddar";
     string password = "password";
 
-    InMemoryUserRepository repository = await GetInMemoryUserRepositoryWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
 
-    Assert.NotNull(await repository.FindUserByUsername(username));
+    Assert.NotNull(await userService.GetUserByUsername(username));
 
     SessionService service = new(
-      repository,
-      new MockJwtConfig_GoodData()
+      userService,
+      GetJwtTokenService()
     );
     
-    SessionToken? token = await service.GenerateSessionToken(new Credentials(
+    TokenWrapper? token = await service.GenerateSessionToken(new Credentials(
       username,
       "badpassword"
     ));
@@ -52,16 +52,16 @@ public class SessionServiceTests
     string username = "oldcheddar";
     string password = "password";
 
-    InMemoryUserRepository repository = await GetInMemoryUserRepositoryWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
 
-    Assert.NotNull(await repository.FindUserByUsername(username));
+    Assert.NotNull(await userService.GetUserByUsername(username));
 
     SessionService service = new(
-      repository,
-      new MockJwtConfig_GoodData()
+      userService,
+      GetJwtTokenService()
     );
     
-    SessionToken? token = await service.GenerateSessionToken(new Credentials(
+    TokenWrapper? token = await service.GenerateSessionToken(new Credentials(
       username,
       password
     ));
@@ -75,15 +75,15 @@ public class SessionServiceTests
     string username = "oldcheddar";
     string password = "password";
 
-    InMemoryUserRepository repository = await GetInMemoryUserRepositoryWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
 
     SessionService service = new(
-      repository,
-      new MockJwtConfig_GoodData()
+      userService,
+      GetJwtTokenService()
     );
     
     // SessionToken badToken = new SessionToken("eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2Q4ZTM5NDc4NzY2NDAxNTAzMjZjM2IiLCJuYmYiOjE2NzUxNTg0NzUsImV4cCI6MTY3NTE1ODUzNSwiaWF0IjoxNjc1MTU4NDc1LCJpc3MiOiJiaXJjaGVnYW1lcy5jb20iLCJhdWQiOiJiaXJjaGVnYW1lcy5jb21URVNUIn0.CJbCUxDng92waygvQBx9mXGdKurVfljGevjg9Bfm06PUQMGcLPWbiYz9gWIMduiqalB4rd6mJp4EwaSHFgC-yQ");
-    SessionToken badToken = new("bad_token");
+    TokenWrapper badToken = new("bad_token");
 
     UserModel? user = await service.ValidateSessionToken(badToken);
 
@@ -96,14 +96,14 @@ public class SessionServiceTests
     string username = "oldcheddar";
     string password = "password";
 
-    InMemoryUserRepository repository = await GetInMemoryUserRepositoryWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
 
     SessionService service = new(
-      repository,
-      new MockJwtConfig_GoodData()
+      userService,
+      GetJwtTokenService()
     );
 
-    SessionToken? goodToken = await service.GenerateSessionToken(
+    TokenWrapper? goodToken = await service.GenerateSessionToken(
       new Credentials(
         username,
         password
@@ -117,7 +117,7 @@ public class SessionServiceTests
     Assert.Equal(username, user.UserDetails.Username);
   }
 
-  private async Task<InMemoryUserRepository> GetInMemoryUserRepositoryWithUserAndPassword(string username, string password)
+  private async Task<UserService> GetUserServiceWithUserAndPassword(string username, string password)
   {
 
     InMemoryUserRepository repository = new();
@@ -131,6 +131,11 @@ public class SessionServiceTests
       false
     ));
 
-    return repository;
+    return new UserService(repository);
+  }
+
+  private IJwtTokenService GetJwtTokenService()
+  {
+    return new JwtTokenService(new MockJwtConfig_GoodData());
   }
 }

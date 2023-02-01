@@ -25,9 +25,9 @@ public class UserService : IUserService
     await userRepository.DeleteUserById(id);
   }
 
-  public async Task EditUser(UserViewModel user)
+  public async Task UpdateUser(UserViewModel user)
   {
-    await userRepository.EditUser(user);
+    await userRepository.UpdateUser(user);
   }
 
   public async Task<IEnumerable<UserModel>> GetAllUsers()
@@ -65,5 +65,10 @@ public class UserService : IUserService
   private string HashPassword(string password)
   {
     return BCrypt.Net.BCrypt.HashPassword(password);
+  }
+
+  public async Task UpdateUser(UserModel user)
+  {
+    await userRepository.UpdateUser(user);
   }
 }

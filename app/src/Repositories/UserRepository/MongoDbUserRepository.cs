@@ -34,7 +34,7 @@ public class MongoDbUserRepository : IUserRepository
     await userCollection.DeleteOneAsync(user => user.Id == id);
   }
 
-  public async Task EditUser(UserViewModel user)
+  public async Task UpdateUser(UserViewModel user)
   {
     var updateDefinition = Builders<UserModel>.Update
       .Set(u => u.UserDetails.Username, user.UserDetails.Username)
@@ -56,5 +56,10 @@ public class MongoDbUserRepository : IUserRepository
   public async Task<UserModel?> FindUserByUsername(string username)
   {
     return await (await userCollection.FindAsync(user => user.UserDetails.Username == username)).FirstOrDefaultAsync();
+  }
+
+  public Task UpdateUser(UserModel user)
+  {
+    throw new NotImplementedException();
   }
 }

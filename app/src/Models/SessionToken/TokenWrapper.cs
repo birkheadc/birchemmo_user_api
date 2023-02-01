@@ -1,9 +1,9 @@
 namespace BircheMmoUserApi.Models;
 
-public record SessionToken
+public record TokenWrapper
 {
   public string Token { get; set; } = "";
-  public SessionToken(string token)
+  public TokenWrapper(string token)
   {
     Token = token;
   }

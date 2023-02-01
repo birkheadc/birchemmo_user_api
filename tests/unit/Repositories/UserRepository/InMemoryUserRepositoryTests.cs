@@ -217,7 +217,7 @@ public class InMemoryUserRepositoryTests
   }
 
   [Fact]
-  public async Task EditUser_Updates_Values()
+  public async Task UpdateUser_Updates_Values()
   {
     InMemoryUserRepository repository = new();
     
@@ -239,14 +239,14 @@ public class InMemoryUserRepositoryTests
     Assert.Equal(userModel.UserDetails.Username, "oldcheddar");
     Assert.Equal(userModel.UserDetails.Role, Role.ADMIN);
 
-    UserViewModel editUser = new(
+    UserViewModel updateUser = new(
       id.ToString(),
       "newcheddar",
       "newcheddar@site.com",
       Role.USER,
       false
     );
-    await repository.EditUser(editUser);
+    await repository.UpdateUser(updateUser);
 
     userModel = await repository.FindUserByUsername("oldcheddar");
     Assert.Null(userModel);
@@ -258,7 +258,7 @@ public class InMemoryUserRepositoryTests
   }
 
   [Fact]
-  public async Task EditUser_Does_Nothing_If_User_Not_Found()
+  public async Task UpdateUser_Does_Nothing_If_User_Not_Found()
   {
     InMemoryUserRepository repository = new();
     
@@ -273,17 +273,45 @@ public class InMemoryUserRepositoryTests
 
     await repository.CreateUser(newUser);
 
-    UserViewModel editUser = new(
+    UserViewModel updateUser = new(
       ObjectId.Empty.ToString(),
       "newcheddar",
       "newcheddar@site.com",
       Role.USER,
       false
     );
-    await repository.EditUser(editUser);
+    await repository.UpdateUser(updateUser);
 
     UserModel? user = await repository.FindUserByUsername("oldcheddar");
     Assert.NotNull(user);
+  }
+
+  [Fact]
+  public async Task UpdateUser_WithUserModel_UpdatesUser()
+  {
+    InMemoryUserRepository repository = new();
+    
+    UserModel newUser = new(
+      ObjectId.GenerateNewId(),
+      "oldcheddar",
+      "passw0rd",
+      "oldcheddar@site.com",
+      Role.ADMIN,
+      false
+    );
+
+    await repository.CreateUser(newUser);
+
+    UserModel? user = await repository.FindUserById(newUser.Id);
+    Assert.NotNull(user);
+    Assert.True(user.IsEmailVerified == false);
+
+    newUser.IsEmailVerified = true;
+    await repository.UpdateUser(newUser);
+
+    user = await repository.FindUserById(newUser.Id);
+    Assert.NotNull(user);
+    Assert.True(user.IsEmailVerified == true);
   }
 
   private List<UserModel> GenerateListOfNUserModels(int n)

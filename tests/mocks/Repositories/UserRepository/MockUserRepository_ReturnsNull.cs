@@ -20,7 +20,7 @@ public class MockUserRepository_ReturnsNull : IUserRepository
     throw new System.NotImplementedException();
   }
 
-  public Task EditUser(UserViewModel user)
+  public Task UpdateUser(UserViewModel user)
   {
     throw new System.NotImplementedException();
   }
@@ -38,5 +38,10 @@ public class MockUserRepository_ReturnsNull : IUserRepository
   public async Task<UserModel?> FindUserByUsername(string username)
   {
     return null;
+  }
+
+  public Task UpdateUser(UserModel user)
+  {
+    throw new System.NotImplementedException();
   }
 }

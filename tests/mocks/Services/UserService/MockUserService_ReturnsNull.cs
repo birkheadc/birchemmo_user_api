@@ -19,7 +19,7 @@ public class MockUserService_ReturnsNull : IUserService
     
   }
 
-  public async Task EditUser(UserViewModel user)
+  public async Task Update(UserViewModel user)
   {
 
   }
@@ -37,5 +37,15 @@ public class MockUserService_ReturnsNull : IUserService
   public async Task<UserModel?> GetUserByUsername(string username)
   {
     return null;
+  }
+
+  public Task UpdateUser(UserViewModel user)
+  {
+    throw new System.NotImplementedException();
+  }
+
+  public Task UpdateUser(UserModel user)
+  {
+    throw new System.NotImplementedException();
   }
 }

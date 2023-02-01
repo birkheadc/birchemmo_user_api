@@ -57,7 +57,7 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
     throw new System.NotImplementedException();
   }
 
-  public Task EditUser(UserViewModel user)
+  public Task UpdateUser(UserViewModel user)
   {
     throw new System.NotImplementedException();
   }
@@ -89,5 +89,10 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
     {
       return null;
     }
+  }
+
+  public Task UpdateUser(UserModel user)
+  {
+    throw new NotImplementedException();
   }
 }

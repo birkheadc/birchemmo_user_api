@@ -15,7 +15,6 @@ public class InMemoryUserRepository : IUserRepository
 
   public InMemoryUserRepository()
   {
-    Console.WriteLine("In Memory User Repo Online...");
     users = new();
   }
   public async Task<UserModel?> CreateUser(UserModel user)
@@ -30,12 +29,24 @@ public class InMemoryUserRepository : IUserRepository
     users.Remove(id);
   }
 
-  public async Task EditUser(UserViewModel user)
+  public async Task UpdateUser(UserViewModel user)
   {
     if (users.ContainsKey(ObjectId.Parse(user.Id)) == false) return;
     users[ObjectId.Parse(user.Id)].UserDetails.Username = user.UserDetails.Username;
     users[ObjectId.Parse(user.Id)].UserDetails.Role = user.UserDetails.Role;
     users[ObjectId.Parse(user.Id)].IsEmailVerified = user.IsEmailVerified;
+  }
+
+  public async Task UpdateUser(UserModel user)
+  {
+    UserViewModel viewModel = new(
+      user.Id.ToString(),
+      user.UserDetails.Username,
+      user.UserDetails.EmailAddress,
+      user.UserDetails.Role,
+      user.IsEmailVerified
+    );
+    await UpdateUser(viewModel);
   }
 
   public async Task<IEnumerable<UserModel>> FindAllUsers()

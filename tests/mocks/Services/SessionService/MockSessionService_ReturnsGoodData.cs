@@ -6,12 +6,12 @@ namespace BircheMmoUserApiTests.Mocks.Services;
 
 public class MockSessionService_ReturnsGoodData : ISessionService
 {
-  public Task<SessionToken?> GenerateSessionToken(Credentials credentials)
+  public Task<TokenWrapper?> GenerateSessionToken(Credentials credentials)
   {
     throw new System.NotImplementedException();
   }
 
-  public Task<UserModel?> ValidateSessionToken(SessionToken token)
+  public Task<UserModel?> ValidateSessionToken(TokenWrapper token)
   {
     throw new System.NotImplementedException();
   }
