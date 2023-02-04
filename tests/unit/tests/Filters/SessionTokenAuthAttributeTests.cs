@@ -38,7 +38,7 @@ public class SessionTokenAuthAttributeTests
 
     UnauthorizedObjectResult? result = actionExecutingContext.Result as UnauthorizedObjectResult;
     Assert.NotNull(result);
-    Assert.Equal(result.Value, UnauthorizedErrorMessage.MISSING_AUTHORIZATION_HEADER);
+    Assert.Equal(UnauthorizedErrorMessage.MISSING_AUTHORIZATION_HEADER, result.Value);
   }
 
   [Fact]
@@ -58,7 +58,7 @@ public class SessionTokenAuthAttributeTests
 
     UnauthorizedObjectResult? result = actionExecutingContext.Result as UnauthorizedObjectResult;
     Assert.NotNull(result);
-    Assert.Equal(result.Value, UnauthorizedErrorMessage.AUTHORIZATION_HEADER_BAD_FORMAT);
+    Assert.Equal(UnauthorizedErrorMessage.AUTHORIZATION_HEADER_BAD_FORMAT, result.Value);
   }
 
   [Fact]
@@ -78,7 +78,7 @@ public class SessionTokenAuthAttributeTests
 
     UnauthorizedObjectResult? result = actionExecutingContext.Result as UnauthorizedObjectResult;
     Assert.NotNull(result);
-    Assert.Equal(result.Value, UnauthorizedErrorMessage.TOKEN_INVALID);
+    Assert.Equal(UnauthorizedErrorMessage.TOKEN_INVALID, result.Value);
   }
 
   [Fact]

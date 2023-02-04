@@ -15,8 +15,8 @@ public class CredentialsDecoderTests
     Credentials? credentials = decoder.DecodeCredentialsFromBasic(basic);
 
     Assert.NotNull(credentials);
-    Assert.Equal(credentials.Username, expectedUsername);
-    Assert.Equal(credentials.Password, expectedPassword);
+    Assert.Equal(expectedUsername, credentials.Username);
+    Assert.Equal(expectedPassword, credentials.Password);
   }
 
   [Theory]

@@ -51,7 +51,7 @@ public class JwtServiceTests
 
     Assert.NotNull(data);
 
-    Assert.Equal(data.UserId, id);
-    Assert.Equal(data.TokenType, tokenType);
+    Assert.Equal(id, data.UserId);
+    Assert.Equal(tokenType, data.TokenType);
   }
 }

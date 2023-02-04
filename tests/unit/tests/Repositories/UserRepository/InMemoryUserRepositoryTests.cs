@@ -267,8 +267,8 @@ public class InMemoryUserRepositoryTests
     UserModel? userModel = await repository.FindUserById(id);
 
     Assert.NotNull(userModel);
-    Assert.Equal(userModel.UserDetails.Username, "oldcheddar");
-    Assert.Equal(userModel.UserDetails.Role, Role.ADMIN);
+    Assert.Equal("oldcheddar", userModel.UserDetails.Username);
+    Assert.Equal(Role.ADMIN, userModel.UserDetails.Role);
 
     UserViewModel updateUser = new(
       id.ToString(),
@@ -284,8 +284,8 @@ public class InMemoryUserRepositoryTests
 
     userModel = await repository.FindUserById(id);
     Assert.NotNull(userModel);
-    Assert.Equal(userModel.UserDetails.Username, "newcheddar");
-    Assert.Equal(userModel.UserDetails.Role, Role.UNVALIDATED_USER);
+    Assert.Equal("newcheddar", userModel.UserDetails.Username);
+    Assert.Equal(Role.UNVALIDATED_USER, userModel.UserDetails.Role);
   }
 
   [Fact]
