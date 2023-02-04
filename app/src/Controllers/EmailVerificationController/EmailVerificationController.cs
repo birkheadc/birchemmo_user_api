@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BircheMmoUserApi.Controllers;
 
+#pragma warning disable 1998
 [ApiController]
 [Route("api/email-verification")]
 public class EmailVerificationController : ControllerBase

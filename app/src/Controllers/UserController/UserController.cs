@@ -23,7 +23,7 @@ public class UserController : ControllerBase
 
   [HttpGet]
   [Route("all")]
-  [SessionTokenAuthorize]
+  [TypeFilter(typeof(SessionTokenAuthorizeAttribute))]
   public async Task<ActionResult<IEnumerable<UserViewModel>>> GetAllUsers()
   {
     try
@@ -56,7 +56,7 @@ public class UserController : ControllerBase
   }
 
   [HttpGet]
-  [SessionTokenAuthorize]
+  [TypeFilter(typeof(SessionTokenAuthorizeAttribute))]
   public async Task<ActionResult<UserViewModel>> GetUserSelf()
   {
     UserViewModel? requestUser = GetRequestUser();
