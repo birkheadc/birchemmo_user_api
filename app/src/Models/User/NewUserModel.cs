@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace BircheMmoUserApi.Models;
 
 ///<summary>
@@ -8,13 +10,18 @@ public record NewUserModel
   public UserDetails UserDetails { get; set; }
   public string Password { get; set; }
 
-  public NewUserModel(string username, string password, string emailAddress, Role role)
+  // public NewUserModel()
+  // {
+  //   UserDetails = new(
+  //     "",
+  //     "",
+  //     Role.USER
+  //   );
+  //   Password = "";
+  // }
+  public NewUserModel(UserDetails userDetails, string password)
   {
-    UserDetails = new(
-      username,
-      emailAddress,
-      role
-    );
+    UserDetails = userDetails;
     Password = password;
   }
 }

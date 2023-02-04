@@ -19,7 +19,8 @@ public class InMemoryUserRepository : IUserRepository
   }
   public async Task<UserModel?> CreateUser(UserModel user)
   {
-    if (IsUsernameAvailable(user.UserDetails.Username) == false) return null;
+    if (IsUserUniqueEnough(user) == false) return null;
+
     users.Add(user.Id, user);
     return user;
   }
@@ -89,11 +90,12 @@ public class InMemoryUserRepository : IUserRepository
     }
   }
 
-  private bool IsUsernameAvailable(string username)
+  private bool IsUserUniqueEnough(UserModel user)
   {
     foreach (KeyValuePair<ObjectId, UserModel> pair in users)
     {
-      if (pair.Value.UserDetails.Username == username) return false;
+      if (pair.Value.UserDetails.Username == user.UserDetails.Username) return false;
+      if (pair.Value.UserDetails.EmailAddress == user.UserDetails.EmailAddress) return false;
     }
     return true;
   }

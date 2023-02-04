@@ -1,6 +1,10 @@
+using System.Text;
 using BircheMmoUserApi.Config;
+using BircheMmoUserApi.Middleware;
 using BircheMmoUserApi.Repositories;
 using BircheMmoUserApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +15,11 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserViewService, UserViewService>();
-builder.Services.AddSingleton<IUserRepository, MongoDbUserRepository>();
+builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
 builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+builder.Services.AddHttpContextAccessor();
 
 // Build Configs from appsettings / environment variables
 
@@ -41,6 +48,25 @@ builder.Services.AddCors(options =>
         });
 });
 
+// builder.Services.AddAuthentication();
+
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//   .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
+//     options => 
+//     {
+//       options.TokenValidationParameters = new()
+//       {
+//         ValidateIssuer = false,
+//         ValidateAudience = false,
+//         ValidateLifetime = true,
+//         ValidateIssuerSigningKey = true,
+//         ValidIssuer = builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>().Issuer,
+//         ValidAudience = builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>().Audience,
+//         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>().Key))
+//       };
+//     }
+//   );
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -63,7 +89,8 @@ if (app.Environment.IsProduction())
   app.UseHttpsRedirection();
 }
 
-app.UseAuthorization();
+// app.UseAuthentication();
+// app.UseAuthorization();
 
 app.MapControllers();
 

@@ -32,7 +32,7 @@ public class EmailVerificationServiceTests
       "i_dont_exist",
       "hashed_password_is_not_actually_hashed_wow",
       "bad@user.model",
-      Role.USER,
+      Role.UNVALIDATED_USER,
       false
     );
 
@@ -83,7 +83,7 @@ public class EmailVerificationServiceTests
       username,
       BCrypt.Net.BCrypt.HashPassword(password),
       username + "@site.com",
-      Role.USER,
+      Role.UNVALIDATED_USER,
       false
     ));
 

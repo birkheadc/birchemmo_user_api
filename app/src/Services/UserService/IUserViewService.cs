@@ -11,8 +11,10 @@ public interface IUserViewService
   public Task<IEnumerable<UserViewModel>> GetAllUsers();
   public Task<UserViewModel?> GetUserByUsername(string username);
   public Task<UserViewModel?> GetUserById(string id);
+  public Task<UserViewModel?> GetUserById(ObjectId id);
   public Task<UserViewModel?> CreateUser(NewUserModel user);
   public Task DeleteUserById(ObjectId id);
+  public Task DeleteUserById(string id);
   public Task UpdateUser(UserViewModel user);
   public Task UpdateUser(UserModel user);
 }

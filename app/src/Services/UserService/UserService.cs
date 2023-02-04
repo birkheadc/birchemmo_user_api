@@ -7,10 +7,12 @@ namespace BircheMmoUserApi.Services;
 public class UserService : IUserService
 {
   private readonly IUserRepository userRepository;
+  private readonly UserConverter converter;
 
   public UserService(IUserRepository userRepository)
   {
     this.userRepository = userRepository;
+    converter = new();
   }
 
   public async Task<UserModel?> CreateUser(NewUserModel user)
@@ -26,6 +28,11 @@ public class UserService : IUserService
   }
 
   public async Task UpdateUser(UserViewModel user)
+  {
+    await userRepository.UpdateUser(user);
+  }
+
+  public async Task UpdateUser(UserModel user)
   {
     await userRepository.UpdateUser(user);
   }
@@ -50,25 +57,15 @@ public class UserService : IUserService
 
   private UserModel ToUserModel(NewUserModel newUserModel)
   {
-    UserModel userModel = new(
-      ObjectId.GenerateNewId(),
-      newUserModel.UserDetails.Username,
-      HashPassword(newUserModel.Password),
-      newUserModel.UserDetails.EmailAddress,
-      newUserModel.UserDetails.Role,
-      false
+    UserModel userModel = converter.ToUserModel(
+      newUserModel,
+      HashPassword(newUserModel.Password)
     );
-
     return userModel;
   }
 
   private string HashPassword(string password)
   {
     return BCrypt.Net.BCrypt.HashPassword(password);
-  }
-
-  public async Task UpdateUser(UserModel user)
-  {
-    await userRepository.UpdateUser(user);
   }
 }

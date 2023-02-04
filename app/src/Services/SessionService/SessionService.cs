@@ -43,6 +43,7 @@ public class SessionService : ISessionService
   {
     TokenData? data = jwtTokenService.ValidateToken(token);
     if (data is null) return null;
+    if (data.TokenType != TokenType.Login) return null;
     return await userService.GetUserById(data.UserId);
   }
 }

@@ -6,16 +6,23 @@ namespace BircheMmoUserApi.Services;
 public class UserViewService : IUserViewService
 {
   private readonly IUserService userService;
+  private readonly UserConverter converter;
 
   public UserViewService(IUserService userService)
   {
     this.userService = userService;
+    converter = new();
   }
 
   public async Task<UserViewModel?> CreateUser(NewUserModel user)
   {
     UserModel? userModel = await userService.CreateUser(user);
     return ToViewModel(userModel);
+  }
+
+  public async Task DeleteUserById(string id)
+  {
+    await DeleteUserById(ObjectId.Parse(id));
   }
 
   public async Task DeleteUserById(ObjectId id)
@@ -28,6 +35,11 @@ public class UserViewService : IUserViewService
     await userService.UpdateUser(user);
   }
 
+  public async Task UpdateUser(UserModel user)
+  {
+    await userService.UpdateUser(user);
+  }
+
   public async Task<IEnumerable<UserViewModel>> GetAllUsers()
   {
     IEnumerable<UserModel> userModels = await userService.GetAllUsers();
@@ -36,7 +48,12 @@ public class UserViewService : IUserViewService
 
   public async Task<UserViewModel?> GetUserById(string id)
   {
-    UserModel? userModel = await userService.GetUserById(ObjectId.Parse(id));
+    return await GetUserById(ObjectId.Parse(id));
+  }
+
+  public async Task<UserViewModel?> GetUserById(ObjectId id)
+  {
+    UserModel? userModel = await userService.GetUserById(id);
     return ToViewModel(userModel);
   }
 
@@ -49,14 +66,7 @@ public class UserViewService : IUserViewService
   private UserViewModel? ToViewModel(UserModel? userModel)
   {
     if (userModel is null) return null;
-    return new UserViewModel
-    (
-      userModel.Id.ToString(),
-      userModel.UserDetails.Username,
-      userModel.UserDetails.EmailAddress,
-      userModel.UserDetails.Role,
-      userModel.IsEmailVerified
-    );
+    return converter.ToUserViewModel(userModel);
   }
 
   private IEnumerable<UserViewModel> ToViewModel(IEnumerable<UserModel> userModels)
@@ -67,10 +77,5 @@ public class UserViewService : IUserViewService
       userViewModels.Add(ToViewModel(userModel)!);
     }
     return userViewModels;
-  }
-
-  public async Task UpdateUser(UserModel user)
-  {
-    await userService.UpdateUser(user);
   }
 }

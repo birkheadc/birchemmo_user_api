@@ -1,4 +1,5 @@
 using BircheMmoUserApi.Models;
+using MongoDB.Bson;
 
 namespace BircheMmoUserApi.Services;
 

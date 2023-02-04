@@ -27,7 +27,7 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
       "user_2",
       BCrypt.Net.BCrypt.HashPassword("hashedpassasdfasdword"),
       "example@example.com",
-      Role.USER,
+      Role.UNVALIDATED_USER,
       true
     ));
     users.Add(new UserModel(
@@ -35,7 +35,7 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
       "user_3",
       BCrypt.Net.BCrypt.HashPassword("hasheasdfasddpassword"),
       "user@place.extension",
-      Role.USER,
+      Role.UNVALIDATED_USER,
       true
     ));
     users.Add(new UserModel(
@@ -43,7 +43,7 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
       "user_4",
       BCrypt.Net.BCrypt.HashPassword("hashedpasasdfasdsword"),
       "user_4@my.site",
-      Role.USER,
+      Role.UNVALIDATED_USER,
       false
     ));
   }

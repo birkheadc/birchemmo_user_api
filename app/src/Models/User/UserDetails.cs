@@ -8,6 +8,7 @@ public record UserDetails
   public string Username { get; set; }
   public string EmailAddress { get; set; }
   public Role Role { get; set; }
+  
   public UserDetails(string username, string emailAddress, Role role)
   {
     Username = username;
