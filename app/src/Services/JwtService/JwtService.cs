@@ -8,12 +8,12 @@ using MongoDB.Bson;
 
 namespace BircheMmoUserApi.Services;
 
-public class JwtTokenService : IJwtTokenService
+public class JwtService : IJwtService
 {
   private readonly JwtConfig jwtConfig;
   private readonly JwtSecurityTokenHandler tokenHandler;
 
-  public JwtTokenService(JwtConfig jwtConfig)
+  public JwtService(JwtConfig jwtConfig)
   {
     this.jwtConfig = jwtConfig;
     tokenHandler = new();

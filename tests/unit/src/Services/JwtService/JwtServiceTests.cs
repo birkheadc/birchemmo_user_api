@@ -6,12 +6,12 @@ using Xunit;
 
 namespace BircheMmoUserApiUnitTests.Services;
 
-public class JwtTokenServiceTests
+public class JwtServiceTests
 {
   [Fact]
   public void Service_Resolves()
   {
-    JwtTokenService service = new(new MockJwtConfig_GoodData());
+    JwtService service = new(new MockJwtConfig_GoodData());
 
     Assert.NotNull(service);
   }
@@ -19,7 +19,7 @@ public class JwtTokenServiceTests
   [Fact]
   public void GenerateToken_Returns_Token()
   {
-    JwtTokenService service = new(new MockJwtConfig_GoodData());
+    JwtService service = new(new MockJwtConfig_GoodData());
 
     TokenWrapper token = service.GenerateToken(
       new TokenData(
@@ -38,7 +38,7 @@ public class JwtTokenServiceTests
   public void ValidateToken_Correctly_Validates_Token(TokenType tokenType)
   {
     ObjectId id = ObjectId.GenerateNewId();
-    JwtTokenService service = new(new MockJwtConfig_GoodData());
+    JwtService service = new(new MockJwtConfig_GoodData());
 
     TokenWrapper token = service.GenerateToken(
       new TokenData(

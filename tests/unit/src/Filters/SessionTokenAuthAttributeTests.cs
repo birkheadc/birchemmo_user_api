@@ -190,7 +190,7 @@ public class SessionTokenAuthAttributeTests
   {
     return new SessionService(
       new MockUserService_ReturnsGoodData(),
-      new JwtTokenService(new MockJwtConfig_GoodData())
+      new JwtService(new MockJwtConfig_GoodData())
     );
   }
 }

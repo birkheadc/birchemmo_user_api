@@ -13,7 +13,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserViewService, UserViewService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
-builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<SessionTokenAuthorizeAttribute>();
 
 if (builder.Environment.IsDevelopment())

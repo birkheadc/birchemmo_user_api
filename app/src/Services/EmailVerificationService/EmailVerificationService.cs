@@ -10,9 +10,9 @@ namespace BircheMmoUserApi.Services;
 public class EmailVerificationService : IEmailVerificationService
 {
   private readonly IUserService userService;
-  private readonly IJwtTokenService tokenService;
+  private readonly IJwtService tokenService;
 
-  public EmailVerificationService(IUserService userService, IJwtTokenService tokenService)
+  public EmailVerificationService(IUserService userService, IJwtService tokenService)
   {
     this.userService = userService;
     this.tokenService = tokenService;

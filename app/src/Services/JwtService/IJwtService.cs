@@ -3,7 +3,7 @@ using BircheMmoUserApi.Models;
 
 namespace BircheMmoUserApi.Services;
 
-public interface IJwtTokenService
+public interface IJwtService
 {
   public TokenWrapper GenerateToken(TokenData data);
   public TokenData? ValidateToken(TokenWrapper token);

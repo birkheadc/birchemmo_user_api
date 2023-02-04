@@ -90,8 +90,8 @@ public class EmailVerificationServiceTests
     return new UserService(repository);
   }
 
-  private IJwtTokenService GetJwtTokenService()
+  private IJwtService GetJwtTokenService()
   {
-    return new JwtTokenService(new MockJwtConfig_GoodData());
+    return new JwtService(new MockJwtConfig_GoodData());
   }
 }

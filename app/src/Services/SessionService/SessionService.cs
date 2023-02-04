@@ -11,9 +11,9 @@ namespace BircheMmoUserApi.Services;
 public class SessionService : ISessionService
 {
   private readonly IUserService userService;
-  private readonly IJwtTokenService jwtTokenService;
+  private readonly IJwtService jwtTokenService;
 
-  public SessionService(IUserService userService, IJwtTokenService jwtTokenService)
+  public SessionService(IUserService userService, IJwtService jwtTokenService)
   {
     this.userService = userService;
     this.jwtTokenService = jwtTokenService;
