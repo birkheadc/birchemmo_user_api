@@ -33,3 +33,15 @@ ASPNETCORE_EMAILCONFIG_PASSWORD
 
 ASPNETCORE_JWTCONFIG_KEY
 ```
+
+# Tests
+
+With this project I have finally gotten serious about testing, both Unit tests and Integration tests.
+
+This application's tests are in separate projects but the same solution. Unit tests and Integration tests are each their own project.
+
+Not much to say in this section except that I have finally seen the light of the usefulness of good Tests. Even the simple ones I've written so far save me a lot of time manually testing the project as retesting old features as it grows.
+
+Testing has also ~~forced~~ led me to learn a lot about the ASP.NET framework that I had been taking for granted. It's hard to test an ActionFilter without knowing how an ActionContext is used, for example.
+
+I'll continue putting more emphasis on testing going forward.
