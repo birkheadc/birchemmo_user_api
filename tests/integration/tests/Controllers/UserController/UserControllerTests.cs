@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using BircheMmoUserApi.Repositories;
+using Newtonsoft.Json;
 
 namespace BircheMmoUserApiIntegrationTests.Controllers;
 
@@ -24,7 +25,7 @@ public class UserControllerTests
     HttpClient client = app.CreateClient();
     Assert.NotNull(client);
 
-    HttpResponseMessage response = await client.GetAsync("/api/user/all");
+    HttpResponseMessage response = await client.GetAsync("/api/user");
     Assert.NotNull(response);
     Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
   }
@@ -44,7 +45,8 @@ public class UserControllerTests
       false
     );
     seedUsers.Add(user_1);
-    MockWebApplicationFactory_SeedsGivenUsers<Program> app = new();
+
+    WebApplicationFactory<Program> app = new();
 
     IUserRepository repository = app.Services.GetRequiredService<IUserRepository>();
     foreach (UserModel user in seedUsers)
@@ -65,7 +67,26 @@ public class UserControllerTests
     Assert.NotNull(response);
     response.EnsureSuccessStatusCode();
     
-    string json = response.Content.ToJson();
-    Assert.Equal("wrong", json);
+    string content = await response.Content.ReadAsStringAsync();
+    TokenWrapper token = JsonConvert.DeserializeObject<TokenWrapper>(content);
+
+    Assert.NotNull(token);
+    
+    message = new(HttpMethod.Get, "/api/user");
+    message.Headers.Authorization = new(
+      "Bearer",
+      token.Token
+    );
+
+    response = await client.SendAsync(message);
+
+    Assert.NotNull(response);
+    response.EnsureSuccessStatusCode();
+
+    content = await response.Content.ReadAsStringAsync();
+    UserViewModel userViewModel = JsonConvert.DeserializeObject<UserViewModel>(content);
+
+    Assert.NotNull(userViewModel);
+    Assert.Equal(user_1.Id.ToString(), userViewModel.Id);
   }
 }
