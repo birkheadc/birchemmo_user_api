@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace BircheMmoUserApi.Models;
 
 public record Credentials
@@ -14,5 +16,10 @@ public record Credentials
   {
     Username = username;
     Password = password;
+  }
+
+  public string ToBasicAuth()
+  {
+    return System.Convert.ToBase64String(Encoding.GetEncoding("iso-8859-1").GetBytes(Username + ":" + Password));
   }
 }

@@ -23,7 +23,7 @@ public class UserController : ControllerBase
 
   [HttpGet]
   [Route("all")]
-  [TypeFilter(typeof(SessionTokenAuthorizeAttribute))]
+  [SessionTokenAuthorizeAttribute(Role.ADMIN)]
   public async Task<ActionResult<IEnumerable<UserViewModel>>> GetAllUsers()
   {
     try
@@ -41,6 +41,7 @@ public class UserController : ControllerBase
 
   [HttpGet]
   [Route("id/{id}")]
+  [SessionTokenAuthorize(Role.ADMIN)]
   public async Task<ActionResult<UserViewModel>> GetUserById([FromRoute] string id)
   {
     try
@@ -53,10 +54,10 @@ public class UserController : ControllerBase
     {
       return StatusCode(9001);
     }
-  }
+  } 
 
   [HttpGet]
-  [TypeFilter(typeof(SessionTokenAuthorizeAttribute))]
+  [SessionTokenAuthorize(Role.UNVALIDATED_USER)]
   public async Task<ActionResult<UserViewModel>> GetUserSelf()
   {
     UserViewModel? requestUser = GetRequestUser();
@@ -82,6 +83,7 @@ public class UserController : ControllerBase
 
   [HttpDelete]
   [Route("delete/{id}")]
+  [SessionTokenAuthorize(Role.ADMIN)]
   public async Task<IActionResult> DeleteUserById([FromRoute] ObjectId id)
   {
     try
@@ -96,6 +98,7 @@ public class UserController : ControllerBase
   }
 
   [HttpDelete]
+  [SessionTokenAuthorize(Role.UNVALIDATED_USER)]
   public async Task<IActionResult> DeleteUserSelf()
   {
     // Todo
@@ -103,6 +106,7 @@ public class UserController : ControllerBase
   }
 
   [HttpPut]
+  [SessionTokenAuthorize(Role.UNVALIDATED_USER)]
   public async Task<IActionResult> UpdateUserSelf(UserViewModel updatedUser)
   {
     // Todo

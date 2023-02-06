@@ -8,10 +8,10 @@ namespace BircheMmoUserApi.Filters;
 
 public class SessionTokenAuthorizeAttribute : Attribute, IAsyncActionFilter
 {
-  private readonly ISessionService sessionService;
-  public SessionTokenAuthorizeAttribute(ISessionService sessionService)
+  private readonly Role requiredRole;
+  public SessionTokenAuthorizeAttribute(Role requiredRole)
   {
-    this.sessionService = sessionService;
+    this.requiredRole = requiredRole;
     // Todo: Add action parameters to constructor so we can decide if the request user is allowed to do this thing.
   }
   public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -32,11 +32,22 @@ public class SessionTokenAuthorizeAttribute : Attribute, IAsyncActionFilter
 
     // Validate token, deny if not valid
     TokenWrapper token = GetTokenFromBearer(bearer);
-    // ISessionService sessionService = context.HttpContext.RequestServices.GetRequiredService<ISessionService>();
+    ISessionService? sessionService = context.HttpContext.RequestServices.GetService(typeof(ISessionService)) as ISessionService;
+    if (sessionService is null)
+    {
+      context.Result = new BadRequestResult();
+      return;
+    }
     UserModel? requestUser = await sessionService.ValidateSessionToken(token);
     if (requestUser is null)
     {
       context.Result = new UnauthorizedObjectResult(UnauthorizedErrorMessage.TOKEN_INVALID);
+      return;
+    }
+
+    if (requestUser.UserDetails.Role < requiredRole)
+    {
+      context.Result = new UnauthorizedObjectResult(UnauthorizedErrorMessage.PERMISSION_DENIED);
       return;
     }
   

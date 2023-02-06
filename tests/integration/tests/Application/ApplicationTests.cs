@@ -4,17 +4,17 @@ using Xunit;
 
 namespace BircheMmoUserApiIntegrationTests;
 
-public class ApplicationResolves : IClassFixture<WebApplicationFactory<Program>>
+public class ApplicationTests : IClassFixture<WebApplicationFactory<Program>>
 {
   private readonly WebApplicationFactory<Program> factory;
 
-  public ApplicationResolves(WebApplicationFactory<Program> factory)
+  public ApplicationTests(WebApplicationFactory<Program> factory)
   {
     this.factory = factory;
   }
 
   [Fact]
-  public void ApplicationResolvesPlease()
+  public void ApplicationResolves()
   {
     HttpClient client = factory.CreateClient();
     

@@ -16,34 +16,34 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
   {
     users.Add(new UserModel(
       ObjectId.GenerateNewId(),
-      "user_1",
-      BCrypt.Net.BCrypt.HashPassword("hashasdfasdfedpassword"),
+      "admin",
+      BCrypt.Net.BCrypt.HashPassword("password"),
       "test@test.com",
       Role.ADMIN,
       true
     ));
     users.Add(new UserModel(
       ObjectId.GenerateNewId(),
-      "user_2",
-      BCrypt.Net.BCrypt.HashPassword("hashedpassasdfasdword"),
+      "unvalidated_user",
+      BCrypt.Net.BCrypt.HashPassword("password"),
       "example@example.com",
       Role.UNVALIDATED_USER,
       true
     ));
     users.Add(new UserModel(
       ObjectId.GenerateNewId(),
-      "user_3",
-      BCrypt.Net.BCrypt.HashPassword("hasheasdfasddpassword"),
+      "validated_user",
+      BCrypt.Net.BCrypt.HashPassword("password"),
       "user@place.extension",
-      Role.UNVALIDATED_USER,
+      Role.VALIDATED_USER,
       true
     ));
     users.Add(new UserModel(
       ObjectId.GenerateNewId(),
-      "user_4",
-      BCrypt.Net.BCrypt.HashPassword("hashedpasasdfasdsword"),
+      "super_admin",
+      BCrypt.Net.BCrypt.HashPassword("password"),
       "user_4@my.site",
-      Role.UNVALIDATED_USER,
+      Role.SUPER_ADMIN,
       false
     ));
   }

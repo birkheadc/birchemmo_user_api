@@ -24,7 +24,7 @@ public class SessionTokenAuthAttributeTests
   [Fact]
   public async Task OnActionExecutionAsync_ActionContext_Result_Is_UnauthorizedResult_When_No_Authorization_Header()
   {
-    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(GetMockSessionService());
+    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(Role.VISITOR);
 
     HttpContext httpContext = GetMockHttpContext_With_No_Headers();
     ActionContext actionContext = BuildActionContextWithHttpContext(httpContext);
@@ -44,7 +44,7 @@ public class SessionTokenAuthAttributeTests
   [Fact]
   public async Task OnActionExecutionAsync_ActionContext_Result_Is_UnauthorizedResult_When_Authorization_Header_Is_Wrong_Format()
   {
-    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(GetMockSessionService());
+    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(Role.VISITOR);
 
     HttpContext httpContext = GetMockHttpContext_With_Bad_Authorization_Header();
     ActionContext actionContext = BuildActionContextWithHttpContext(httpContext);
@@ -64,9 +64,9 @@ public class SessionTokenAuthAttributeTests
   [Fact]
   public async Task OnActionExecutionAsync_ActionContext_Result_Is_UnauthorizedResult_When_Authorization_Header_Contains_Invalid_Token()
   {
-    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(GetMockSessionService());
+    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(Role.VISITOR);
 
-    HttpContext httpContext = GetMockHttpContext_With_Bad_Session_Token();
+    HttpContext httpContext = GetMockHttpContext_With_Bad_Session_Token_With_SessionService(GetMockSessionService());
     ActionContext actionContext = BuildActionContextWithHttpContext(httpContext);
     ActionExecutingContext actionExecutingContext = BuildActionExecutingContextWithActionContext(actionContext);
     ActionExecutionDelegate actionExecutionDelegate = BuildActionExecutionDelegateWithActionContext(actionContext);
@@ -85,21 +85,18 @@ public class SessionTokenAuthAttributeTests
   public async Task OnActionExecutionAsync_Adds_RequestUser_To_Context_When_Token_Is_Valid()
   {
     ISessionService mockSessionService = GetMockSessionService();
-    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(mockSessionService);
+    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(Role.VISITOR);
 
-    string goodUserName = "user_1";
-    string goodPassword = "hashasdfasdfedpassword";
-
-    TokenWrapper? token = await mockSessionService.GenerateSessionToken(
-      new Credentials(
-        goodUserName,
-        goodPassword
-      )
+    Credentials credentials = new(
+      "admin",
+      "password"
     );
+
+    TokenWrapper? token = await mockSessionService.GenerateSessionToken(credentials);
 
     Assert.NotNull(token);
 
-    HttpContext httpContext = GetMockHttpContext_With_Good_Session_Token(token.Token);
+    HttpContext httpContext = GetMockHttpContext_With_Good_Session_Token_And_SessionService(token.Token, mockSessionService);
     ActionContext actionContext = BuildActionContextWithHttpContext(httpContext);
     ActionExecutingContext actionExecutingContext = BuildActionExecutingContextWithActionContext(actionContext);
     ActionExecutionDelegate actionExecutionDelegate = BuildActionExecutionDelegateWithActionContext(actionContext);
@@ -112,7 +109,37 @@ public class SessionTokenAuthAttributeTests
     UserModel? requestUser = actionExecutingContext.HttpContext.Items["requestUser"] as UserModel;
     Assert.NotNull(requestUser);
 
-    Assert.Equal(goodUserName, requestUser.UserDetails.Username);
+    Assert.Equal(credentials.Username, requestUser.UserDetails.Username);
+  }
+
+  [Fact]
+  public async Task OnActionExecutionAsync_Result_Is_Unauthorized_When_Role_Is_Insufficient()
+  {
+    ISessionService mockSessionService = GetMockSessionService();
+    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(Role.ADMIN);
+
+    Credentials credentials = new(
+      "validated_user",
+      "password"
+    );
+
+    TokenWrapper? token = await mockSessionService.GenerateSessionToken(credentials);
+
+    Assert.NotNull(token);
+
+    HttpContext httpContext = GetMockHttpContext_With_Good_Session_Token_And_SessionService(token.Token, mockSessionService);
+    ActionContext actionContext = BuildActionContextWithHttpContext(httpContext);
+    ActionExecutingContext actionExecutingContext = BuildActionExecutingContextWithActionContext(actionContext);
+    ActionExecutionDelegate actionExecutionDelegate = BuildActionExecutionDelegateWithActionContext(actionContext);
+
+    await sessionTokenAuthorizeAttribute.OnActionExecutionAsync(
+      actionExecutingContext,
+      actionExecutionDelegate
+    );
+
+    UnauthorizedObjectResult? result = actionExecutingContext.Result as UnauthorizedObjectResult;
+    Assert.NotNull(result);
+    Assert.Equal(UnauthorizedErrorMessage.PERMISSION_DENIED, result.Value);
   }
 
   private HttpContext GetMockHttpContext_With_No_Headers()
@@ -131,21 +158,24 @@ public class SessionTokenAuthAttributeTests
     return mock.Object;
   }
 
-  private HttpContext GetMockHttpContext_With_Bad_Session_Token()
+  private HttpContext GetMockHttpContext_With_Bad_Session_Token_With_SessionService(ISessionService sessionService)
   {
     HeaderDictionary headers = new();
     headers.Add("Authorization", "Bearer wow_this_token_is_trash");
     Mock<HttpContext> mock = new();
     mock.Setup(context => context.Request.Headers).Returns(headers);
+    mock.Setup(context => context.RequestServices.GetService(typeof(ISessionService))).Returns(sessionService);
+    HttpContext context = mock.Object;
     return mock.Object;
   }
 
-  private HttpContext GetMockHttpContext_With_Good_Session_Token(string token)
+  private HttpContext GetMockHttpContext_With_Good_Session_Token_And_SessionService(string token, ISessionService sessionService)
   {
     HeaderDictionary headers = new();
     headers.Add("Authorization", "Bearer " + token);
     Mock<HttpContext> mock = new();
     mock.Setup(context => context.Request.Headers).Returns(headers);
+    mock.Setup(context => context.RequestServices.GetService(typeof(ISessionService))).Returns(sessionService);
     mock.Setup(context => context.Items).Returns(new Dictionary<object, object?>());
     return mock.Object;
   }
