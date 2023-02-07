@@ -36,7 +36,7 @@ public class DebugController : ControllerBase
   {
     try
     {
-      emailService.Test();
+      emailService.SendVerificationEmail("colby", "birkheadc@gmail.com");
       return Ok();
     }
     catch

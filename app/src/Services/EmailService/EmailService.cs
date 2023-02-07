@@ -27,10 +27,39 @@ public class EmailService : IEmailService
     return didSend;
   }
 
-  public void Test()
+  public async Task SendVerificationEmail(string receiverName, string receiverAddress)
   {
-    Console.WriteLine("Address: " + emailConfig.Address);
-    Console.WriteLine("Username: " + emailConfig.Username);    
+    MimeMessage message = CreateVerificationMimeMessage(
+      new MailboxAddress(
+        receiverName,
+        receiverAddress
+      )
+    );
+    await SendMimeMessage(message);
+  }
+
+  private MimeMessage CreateVerificationMimeMessage(MailboxAddress receiver)
+  {
+    MimeMessage message = new();
+
+    message.From.Add(new MailboxAddress(
+      emailConfig.Name,
+      emailConfig.Address
+    ));
+    message.To.Add(receiver);
+    message.Subject = "Please verify your BircheGames account.";
+
+    BodyBuilder bodyBuilder = new();
+
+    string templatePath = "./assets/EmailVerificationTemplate/EmailVerificationTemplate.html";
+    using (StreamReader reader = System.IO.File.OpenText(templatePath))
+    {
+      bodyBuilder.HtmlBody = reader.ReadToEnd();
+    }
+
+    message.Body = bodyBuilder.ToMessageBody();
+
+    return message;
   }
 
   private MimeMessage CreateMimeMessage(EmailMessage message)
