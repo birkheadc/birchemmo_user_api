@@ -18,7 +18,7 @@ public class EmailVerificationService : IEmailVerificationService
     this.tokenService = tokenService;
   }
 
-  public async Task<TokenWrapper?> GenerateEmailVerificationTokenForUser(UserModel user)
+  public async Task<TokenWrapper?> GenerateForUser(UserModel user)
   {
     UserModel? u = await userService.GetUserById(user.Id);
     if (u is null) return null;
@@ -31,15 +31,18 @@ public class EmailVerificationService : IEmailVerificationService
     );
   }
 
-  public async Task<bool> ValidateEmailVerificationTokenForUser(UserModel user, TokenWrapper token)
+  public async Task<bool> Validate(TokenWrapper token)
   {
-    if (user.IsEmailVerified == true) return false;
     try
     {
       TokenData? data = tokenService.ValidateToken(token);
       if (data is null) return false;
 
+      UserModel? user = await userService.GetUserById(data.UserId);
+      if (user is null) return false;
+
       if (user.Id != data.UserId) return false;
+      if (user.IsEmailVerified == true) return false;
 
       user.IsEmailVerified = true;
       await userService.UpdateUser(user);

@@ -36,7 +36,7 @@ public class EmailVerificationServiceTests
       false
     );
 
-    TokenWrapper? token = await service.GenerateEmailVerificationTokenForUser(user);
+    TokenWrapper? token = await service.GenerateForUser(user);
     Assert.Null(token);
   }
 
@@ -51,7 +51,7 @@ public class EmailVerificationServiceTests
     UserModel? user = await userService.GetUserByUsername(username);
     Assert.NotNull(user);
 
-    TokenWrapper? token = await service.GenerateEmailVerificationTokenForUser(user);
+    TokenWrapper? token = await service.GenerateForUser(user);
     Assert.NotNull(token);
   }
   
@@ -66,10 +66,10 @@ public class EmailVerificationServiceTests
     UserModel? user = await userService.GetUserByUsername(username);
     Assert.NotNull(user);
 
-    TokenWrapper? token = await service.GenerateEmailVerificationTokenForUser(user);
+    TokenWrapper? token = await service.GenerateForUser(user);
     Assert.NotNull(token);
 
-    bool isValid = await service.ValidateEmailVerificationTokenForUser(user, token);
+    bool isValid = await service.Validate(token);
     Assert.True(isValid);
   }
 

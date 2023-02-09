@@ -32,15 +32,14 @@ public class UserControllerTests
   [Fact]
   public async Task Existing_User_Is_Able_To_Generate_Session_Token_Then_View_Their_Own_UserViewModel()
   {
-    List<UserModel> seedUsers = new();
     Credentials credentials = new(
       "oldcheddar",
       "password"
     );
-    UserModel user = GenerateUser(credentials, Role.UNVALIDATED_USER);
-    seedUsers.Add(user);
 
-    WebApplicationFactory<Program> app = await CreateMockAppWithSeedUsers(seedUsers);
+    WebApplicationFactory<Program> app = new MockWebApplicationFactoryBuilder()
+      .WithSeedUser(credentials, Role.UNVALIDATED_USER)
+      .Build();
     HttpClient client = app.CreateClient();
 
     TokenWrapper token = await GetSessionTokenFromApi(client, credentials);
@@ -48,21 +47,20 @@ public class UserControllerTests
     
     UserViewModel userViewModel = await GetUserSelfFromApi(client, token);
     Assert.NotNull(userViewModel);
-    Assert.Equal(user.Id.ToString(), userViewModel.Id);
+    Assert.Equal(credentials.Username, userViewModel.UserDetails.Username);
   }
 
   [Fact]
   public async Task GetAllUsers_Returns_401_Unauthorized_If_Not_Admin()
   {
-    List<UserModel> seedUsers = new();
     Credentials credentials = new(
       "oldcheddar",
       "password"
     );
-    UserModel user = GenerateUser(credentials, Role.UNVALIDATED_USER);
-    seedUsers.Add(user);
 
-    WebApplicationFactory<Program> app = await CreateMockAppWithSeedUsers(seedUsers);
+    WebApplicationFactory<Program> app = new MockWebApplicationFactoryBuilder()
+      .WithSeedUser(credentials, Role.UNVALIDATED_USER)
+      .Build();
     HttpClient client = app.CreateClient();
 
     TokenWrapper token = await GetSessionTokenFromApi(client, credentials);
@@ -82,15 +80,14 @@ public class UserControllerTests
   [Fact]
   public async Task GetAllUsers_Returns_All_Users_If_Admin()
   {
-    List<UserModel> seedUsers = new();
     Credentials credentials = new(
       "oldcheddar",
       "password"
     );
-    UserModel user = GenerateUser(credentials, Role.ADMIN);
-    seedUsers.Add(user);
 
-    WebApplicationFactory<Program> app = await CreateMockAppWithSeedUsers(seedUsers);
+    WebApplicationFactory<Program> app = new MockWebApplicationFactoryBuilder()
+      .WithSeedUser(credentials, Role.ADMIN)
+      .Build();
     HttpClient client = app.CreateClient();
 
     TokenWrapper token = await GetSessionTokenFromApi(client, credentials);
@@ -176,30 +173,6 @@ public class UserControllerTests
     List<UserViewModel> userViewModels = JsonConvert.DeserializeObject<List<UserViewModel>>(content);
 
     return userViewModels;
-  }
-
-  private async Task<WebApplicationFactory<Program>> CreateMockAppWithSeedUsers(List<UserModel> seedUsers)
-  {
-    WebApplicationFactory<Program> app = new();
-
-    IUserRepository repository = app.Services.GetRequiredService<IUserRepository>();
-    foreach (UserModel user in seedUsers)
-    {
-      await repository.CreateUser(user);
-    }
-    return app;
-  }
-
-  private UserModel GenerateUser(Credentials credentials, Role role)
-  {
-    return new UserModel(
-      ObjectId.GenerateNewId(),
-      credentials.Username,
-      BCrypt.Net.BCrypt.HashPassword(credentials.Password),
-      "oldcheddar@site.net",
-      role,
-      false
-    );
   }
 
   private string ToBasicAuth(string username, string password)

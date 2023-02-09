@@ -23,8 +23,8 @@ public class EmailVerificationController : ControllerBase
     try
     {
       TokenWrapper token = new(verificationCode);
-      // bool isVerified = await emailVerificationService.ValidateEmailVerificationTokenForUser(token);
-      // if (isVerified == true) return Ok();
+      bool isVerified = await emailVerificationService.Validate(token);
+      if (isVerified == true) return Ok();
       return BadRequest();
     }
     catch
