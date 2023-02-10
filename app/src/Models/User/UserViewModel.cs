@@ -9,9 +9,8 @@ public record UserViewModel
 {
   public UserDetails UserDetails { get; set; }
   public string Id { get; set; }
-  public bool IsEmailVerified { get; set; }
 
-  public UserViewModel(string id, string username, string emailAddress, Role role, bool isEmailVerified)
+  public UserViewModel(string id, string username, string emailAddress, Role role)
   {
     UserDetails = new(
       username,
@@ -19,6 +18,5 @@ public record UserViewModel
       role
     );
     Id = id;
-    IsEmailVerified = isEmailVerified;
   }
 }

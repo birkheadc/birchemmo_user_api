@@ -59,8 +59,7 @@ public class InMemoryUserRepositoryTests
       "oldcheddar",
       "password",
       "oldcheddar@site.com",
-      Role.UNVALIDATED_USER,
-      false
+      Role.UNVALIDATED_USER
     );
 
     UserModel? model = await repository.CreateUser(newUser);
@@ -80,8 +79,7 @@ public class InMemoryUserRepositoryTests
       "oldcheddar",
       "password",
       "oldcheddar@site.com",
-      Role.UNVALIDATED_USER,
-      false
+      Role.UNVALIDATED_USER
     );
 
     await repository.CreateUser(newUser);
@@ -102,8 +100,7 @@ public class InMemoryUserRepositoryTests
       "oldcheddar",
       "password",
       "oldcheddar@site.com",
-      Role.UNVALIDATED_USER,
-      false
+      Role.UNVALIDATED_USER
     );
 
     UserModel repeatUser = new(
@@ -111,8 +108,7 @@ public class InMemoryUserRepositoryTests
       "newcheddar",
       "password",
       "oldcheddar@site.com",
-      Role.UNVALIDATED_USER,
-      false
+      Role.UNVALIDATED_USER
     );
 
     await repository.CreateUser(newUser);
@@ -134,8 +130,7 @@ public class InMemoryUserRepositoryTests
       "oldcheddar",
       "passw0rd",
       "oldcheddar@site.com",
-      Role.ADMIN,
-      false
+      Role.ADMIN
     );
 
     await repository.CreateUser(newUser);
@@ -157,8 +152,7 @@ public class InMemoryUserRepositoryTests
       username,
       "passw0rd",
       username + "@place.com",
-      role,
-      false
+      role
     );
 
     await repository.CreateUser(newUser);
@@ -258,8 +252,7 @@ public class InMemoryUserRepositoryTests
       "oldcheddar",
       "passw0rd",
       "oldcheddar@site.com",
-      Role.ADMIN,
-      false
+      Role.ADMIN
     );
 
     await repository.CreateUser(newUser);
@@ -274,8 +267,7 @@ public class InMemoryUserRepositoryTests
       id.ToString(),
       "newcheddar",
       "newcheddar@site.com",
-      Role.UNVALIDATED_USER,
-      false
+      Role.UNVALIDATED_USER
     );
     await repository.UpdateUser(updateUser);
 
@@ -298,8 +290,7 @@ public class InMemoryUserRepositoryTests
       "oldcheddar",
       "passw0rd",
       "oldcheddar@site.com",
-      Role.ADMIN,
-      false
+      Role.ADMIN
     );
 
     await repository.CreateUser(newUser);
@@ -308,8 +299,7 @@ public class InMemoryUserRepositoryTests
       ObjectId.Empty.ToString(),
       "newcheddar",
       "newcheddar@site.com",
-      Role.UNVALIDATED_USER,
-      false
+      Role.UNVALIDATED_USER
     );
     await repository.UpdateUser(updateUser);
 
@@ -327,22 +317,21 @@ public class InMemoryUserRepositoryTests
       "oldcheddar",
       "passw0rd",
       "oldcheddar@site.com",
-      Role.ADMIN,
-      false
+      Role.UNVALIDATED_USER
     );
 
     await repository.CreateUser(newUser);
 
     UserModel? user = await repository.FindUserById(newUser.Id);
     Assert.NotNull(user);
-    Assert.True(user.IsEmailVerified == false);
+    Assert.Equal(Role.UNVALIDATED_USER, user.UserDetails.Role);
 
-    newUser.IsEmailVerified = true;
+    newUser.UserDetails.Role = Role.VALIDATED_USER;
     await repository.UpdateUser(newUser);
 
     user = await repository.FindUserById(newUser.Id);
     Assert.NotNull(user);
-    Assert.True(user.IsEmailVerified == true);
+    Assert.Equal(Role.VALIDATED_USER, user.UserDetails.Role);
   }
 
   private List<UserModel> GenerateListOfNUserModels(int n)
@@ -355,8 +344,7 @@ public class InMemoryUserRepositoryTests
         "user_" + i.ToString(),
         "passw0rd",
         "user_" + i.ToString() + "@site.com",
-        Role.UNVALIDATED_USER,
-        false
+        Role.UNVALIDATED_USER
       ));
     }
     return users;

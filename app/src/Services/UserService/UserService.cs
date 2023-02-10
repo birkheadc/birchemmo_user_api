@@ -57,15 +57,7 @@ public class UserService : IUserService
 
   private UserModel ToUserModel(NewUserModel newUserModel)
   {
-    UserModel userModel = converter.ToUserModel(
-      newUserModel,
-      HashPassword(newUserModel.Password)
-    );
+    UserModel userModel = converter.ToUserModel(newUserModel);
     return userModel;
-  }
-
-  private string HashPassword(string password)
-  {
-    return BCrypt.Net.BCrypt.HashPassword(password);
   }
 }

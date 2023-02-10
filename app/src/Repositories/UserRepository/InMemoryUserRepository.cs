@@ -33,9 +33,7 @@ public class InMemoryUserRepository : IUserRepository
   public async Task UpdateUser(UserViewModel user)
   {
     if (users.ContainsKey(ObjectId.Parse(user.Id)) == false) return;
-    users[ObjectId.Parse(user.Id)].UserDetails.Username = user.UserDetails.Username;
-    users[ObjectId.Parse(user.Id)].UserDetails.Role = user.UserDetails.Role;
-    users[ObjectId.Parse(user.Id)].IsEmailVerified = user.IsEmailVerified;
+    users[ObjectId.Parse(user.Id)].UserDetails = user.UserDetails;
   }
 
   public async Task UpdateUser(UserModel user)
@@ -44,8 +42,7 @@ public class InMemoryUserRepository : IUserRepository
       user.Id.ToString(),
       user.UserDetails.Username,
       user.UserDetails.EmailAddress,
-      user.UserDetails.Role,
-      user.IsEmailVerified
+      user.UserDetails.Role
     );
     await UpdateUser(viewModel);
   }
@@ -59,7 +56,6 @@ public class InMemoryUserRepository : IUserRepository
       Console.WriteLine("Username: " + user.UserDetails.Username);
       Console.WriteLine("HashedPassword: " + user.HashedPassword);
       Console.WriteLine("Role: " + user.UserDetails.Role);
-      Console.WriteLine("IsEmailVerified: " + user.IsEmailVerified);
       Console.WriteLine("--------------------");
       Console.WriteLine("");
     }

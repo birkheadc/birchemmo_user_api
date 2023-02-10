@@ -11,20 +11,18 @@ public class UserConverter
       userModel.Id.ToString(),
       userModel.UserDetails.Username,
       userModel.UserDetails.EmailAddress,
-      userModel.UserDetails.Role,
-      userModel.IsEmailVerified
+      userModel.UserDetails.Role
     );
   }
 
-  public UserModel ToUserModel(NewUserModel newUserModel, string hashedPassword)
+  public UserModel ToUserModel(NewUserModel newUserModel)
   {
     UserModel userModel = new(
       ObjectId.GenerateNewId(),
-      newUserModel.UserDetails.Username,
-      hashedPassword,
-      newUserModel.UserDetails.EmailAddress,
-      newUserModel.UserDetails.Role,
-      false
+      newUserModel.Credentials.Username,
+      BCrypt.Net.BCrypt.HashPassword(newUserModel.Credentials.Password),
+      newUserModel.EmailAddress,
+      Role.UNVALIDATED_USER
     );
 
     return userModel;

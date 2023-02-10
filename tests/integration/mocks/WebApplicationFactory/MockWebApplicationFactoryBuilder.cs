@@ -18,8 +18,7 @@ public class MockWebApplicationFactoryBuilder
         credentials.Username,
         BCrypt.Net.BCrypt.HashPassword(credentials.Password),
         email,
-        role,
-        role > Role.UNVALIDATED_USER ? true : false
+        role
       )
     );
 

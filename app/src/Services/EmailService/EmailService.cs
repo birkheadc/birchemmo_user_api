@@ -8,10 +8,12 @@ namespace BircheMmoUserApi.Services;
 public class EmailService : IEmailService
 {
   private readonly EmailConfig emailConfig;
+  private readonly IEmailVerificationService emailVerificationService;
 
-  public EmailService(EmailConfig emailConfig)
+  public EmailService(EmailConfig emailConfig, IEmailVerificationService emailVerificationService)
   {
     this.emailConfig = emailConfig;
+    this.emailVerificationService = emailVerificationService;
   }
 
   public async Task<bool> SendEmailAsync(string receiverName, string receiverAddress, string subject, string body)
@@ -27,26 +29,30 @@ public class EmailService : IEmailService
     return didSend;
   }
 
-  public async Task SendVerificationEmail(string receiverName, string receiverAddress)
+  public async Task<bool> SendVerificationEmail(UserModel user)
   {
-    MimeMessage message = CreateVerificationMimeMessage(
-      new MailboxAddress(
-        receiverName,
-        receiverAddress
-      )
-    );
-    await SendMimeMessage(message);
+    MimeMessage? message = await CreateVerificationMimeMessage(user);
+    if (message is null) return false;
+    bool didSend = await SendMimeMessage(message);
+    return didSend;
   }
 
-  private MimeMessage CreateVerificationMimeMessage(MailboxAddress receiver)
+  private async Task<MimeMessage?> CreateVerificationMimeMessage(UserModel user)
   {
+    TokenWrapper? verificationToken = await emailVerificationService.GenerateForUser(user);
+    if (verificationToken is null) return null;
+    string username = user.UserDetails.Username;
+    
     MimeMessage message = new();
 
     message.From.Add(new MailboxAddress(
       emailConfig.Name,
       emailConfig.Address
     ));
-    message.To.Add(receiver);
+    message.To.Add(new MailboxAddress(
+        user.UserDetails.Username,
+        user.UserDetails.EmailAddress
+      ));
     message.Subject = "Please verify your BircheGames account.";
 
     BodyBuilder bodyBuilder = new();
@@ -54,7 +60,10 @@ public class EmailService : IEmailService
     string templatePath = "./assets/EmailVerificationTemplate/EmailVerificationTemplate.html";
     using (StreamReader reader = System.IO.File.OpenText(templatePath))
     {
-      bodyBuilder.HtmlBody = reader.ReadToEnd();
+      string html = reader.ReadToEnd();
+      bodyBuilder.HtmlBody = html
+        .Replace("{{username}}", username)
+        .Replace("{{verificationCode}}", verificationToken.Token);
     }
 
     message.Body = bodyBuilder.ToMessageBody();

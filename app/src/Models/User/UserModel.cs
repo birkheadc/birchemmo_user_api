@@ -11,9 +11,8 @@ public record UserModel
   public UserDetails UserDetails { get; set; }
   public ObjectId Id { get; set; }
   public string HashedPassword { get; set; }
-  public bool IsEmailVerified { get; set; }
 
-  public UserModel(ObjectId id, string username, string hashedPassword, string emailAddress, Role role, bool isEmailVerified)
+  public UserModel(ObjectId id, string username, string hashedPassword, string emailAddress, Role role)
   {
     UserDetails = new(
       username,
@@ -22,6 +21,5 @@ public record UserModel
     );
     Id = id;
     HashedPassword = hashedPassword;
-    IsEmailVerified = isEmailVerified;
   }
 }

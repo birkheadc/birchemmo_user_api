@@ -127,8 +127,7 @@ public class SessionServiceTests
       username,
       BCrypt.Net.BCrypt.HashPassword(password),
       username + "@site.com",
-      Role.UNVALIDATED_USER,
-      false
+      Role.UNVALIDATED_USER
     ));
 
     return new UserService(repository);

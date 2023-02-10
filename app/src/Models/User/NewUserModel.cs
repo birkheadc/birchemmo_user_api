@@ -7,21 +7,15 @@ namespace BircheMmoUserApi.Models;
 /// </summary>
 public record NewUserModel
 {
-  public UserDetails UserDetails { get; set; }
-  public string Password { get; set; }
+  public Credentials Credentials { get; set; }
+  public string EmailAddress { get; set; }
 
-  // public NewUserModel()
-  // {
-  //   UserDetails = new(
-  //     "",
-  //     "",
-  //     Role.USER
-  //   );
-  //   Password = "";
-  // }
-  public NewUserModel(UserDetails userDetails, string password)
+  public NewUserModel(string username, string emailAddress, string password)
   {
-    UserDetails = userDetails;
-    Password = password;
+    Credentials = new(
+      username,
+      password
+    );
+    EmailAddress = emailAddress;
   }
 }

@@ -1,5 +1,7 @@
+using BircheMmoUserApi.Models;
 using BircheMmoUserApi.Services;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace BircheMmoUserApi.Controllers;
 
@@ -9,10 +11,12 @@ public class DebugController : ControllerBase
 {
 
   private readonly IEmailService emailService;
+  private readonly IUserService userService;
 
-  public DebugController(IEmailService emailService)
+  public DebugController(IEmailService emailService, IUserService userService)
   {
     this.emailService = emailService;
+    this.userService = userService;
   }
 
   [HttpPost]
@@ -32,12 +36,20 @@ public class DebugController : ControllerBase
 
   [HttpPost]
   [Route("test")]
-  public IActionResult Test()
+  public async Task<IActionResult> Test()
   {
     try
     {
-      emailService.SendVerificationEmail("colby", "birkheadc@gmail.com");
-      return Ok();
+      NewUserModel newUser = new(
+        "oldcheddar",
+        "birkheadc@gmail.com",
+        "password"
+      );
+      UserModel? user = await userService.CreateUser(newUser);
+      if (user is null) return StatusCode(9003);
+
+      bool didSend = await emailService.SendVerificationEmail(user);
+      return didSend ? Ok() : StatusCode(9002);
     }
     catch
     {

@@ -15,11 +15,10 @@ public class MockUserService_ReturnsGoodData : IUserService
   {
     UserModel userModel = new(
       ObjectId.GenerateNewId(),
-      user.UserDetails.Username,
-      HashPassword(user.Password),
-      user.UserDetails.EmailAddress,
-      user.UserDetails.Role,
-      false
+      user.Credentials.Username,
+      HashPassword(user.Credentials.Password),
+      user.EmailAddress,
+      Role.UNVALIDATED_USER
     );
     return await repository.CreateUser(userModel);
   }

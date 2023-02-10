@@ -30,7 +30,7 @@
     border-width:3px;
     ">
       <p style="font-size: 1.3rem">
-        Hi {{userName}},
+        Hi {{username}},
       </p>
       <p>
         Thank you for signing up for an account at BircheGames.
@@ -39,7 +39,7 @@
       </p>
       
       <a
-      href="www.google.com"
+      href="http://localhost:5048/api/email-verification/{{verificationCode}}"
       style="
       background-color:#3E92CC;
       color:white;
@@ -66,7 +66,7 @@
       margin: 1em auto;
       padding: 0.3em 1em;
       ">
-        https://this-isnt-working-yet.sorry.not-sorry.com
+        http://localhost:5048/api/email-verification/{{verificationCode}}
       </p>
 
       <div style="font-size: 0.8em;">

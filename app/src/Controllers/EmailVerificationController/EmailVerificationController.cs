@@ -16,16 +16,33 @@ public class EmailVerificationController : ControllerBase
     this.emailVerificationService = emailVerificationService;
   }
 
+  [HttpGet]
+  [Route("{verificationCode}")]
+  public async Task<IActionResult> VerifyEmailGet([FromRoute] string verificationCode)
+  {
+    try
+    {
+      TokenWrapper token = new(verificationCode);
+      bool isVerified = await emailVerificationService.ValidateUser(token);
+      if (isVerified == true) return Ok("Your code worked!");
+      return Ok("Your code didn't work :(");
+    }
+    catch
+    {
+      return Ok("Something went wrong!");
+    }
+  }
+
   [HttpPost]
-  [Route("{code}")]
+  [Route("{verificationCode}")]
   public async Task<IActionResult> VerifyEmail([FromRoute] string verificationCode)
   {
     try
     {
       TokenWrapper token = new(verificationCode);
-      bool isVerified = await emailVerificationService.Validate(token);
+      bool isVerified = await emailVerificationService.ValidateUser(token);
       if (isVerified == true) return Ok();
-      return BadRequest();
+      return Unauthorized();
     }
     catch
     {

@@ -19,32 +19,28 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
       "admin",
       BCrypt.Net.BCrypt.HashPassword("password"),
       "test@test.com",
-      Role.ADMIN,
-      true
+      Role.ADMIN
     ));
     users.Add(new UserModel(
       ObjectId.GenerateNewId(),
       "unvalidated_user",
       BCrypt.Net.BCrypt.HashPassword("password"),
       "example@example.com",
-      Role.UNVALIDATED_USER,
-      true
+      Role.UNVALIDATED_USER
     ));
     users.Add(new UserModel(
       ObjectId.GenerateNewId(),
       "validated_user",
       BCrypt.Net.BCrypt.HashPassword("password"),
       "user@place.extension",
-      Role.VALIDATED_USER,
-      true
+      Role.VALIDATED_USER
     ));
     users.Add(new UserModel(
       ObjectId.GenerateNewId(),
       "super_admin",
       BCrypt.Net.BCrypt.HashPassword("password"),
       "user_4@my.site",
-      Role.SUPER_ADMIN,
-      false
+      Role.SUPER_ADMIN
     ));
   }
   public Task<UserModel?> CreateUser(UserModel user)

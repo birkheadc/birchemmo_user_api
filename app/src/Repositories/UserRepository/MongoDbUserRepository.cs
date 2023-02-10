@@ -37,9 +37,7 @@ public class MongoDbUserRepository : IUserRepository
   public async Task UpdateUser(UserViewModel user)
   {
     var updateDefinition = Builders<UserModel>.Update
-      .Set(u => u.UserDetails.Username, user.UserDetails.Username)
-      .Set(u => u.UserDetails.Role, user.UserDetails.Role)
-      .Set(u => u.IsEmailVerified, user.IsEmailVerified);
+      .Set(u => u.UserDetails, user.UserDetails);
     await userCollection.UpdateOneAsync(u => u.Id == ObjectId.Parse(user.Id), updateDefinition);
   }
 

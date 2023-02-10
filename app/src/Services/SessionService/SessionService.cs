@@ -30,7 +30,8 @@ public class SessionService : ISessionService
       new TokenData(
         user.Id,
         TokenType.Login
-      )
+      ),
+      TimeSpan.FromMinutes(1)
     );
   }
 

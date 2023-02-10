@@ -27,11 +27,12 @@ public class EmailVerificationService : IEmailVerificationService
       new TokenData(
         user.Id,
         TokenType.EmailVerification
-      )
+      ),
+      TimeSpan.FromHours(24)
     );
   }
 
-  public async Task<bool> Validate(TokenWrapper token)
+  public async Task<bool> ValidateUser(TokenWrapper token)
   {
     try
     {
@@ -42,9 +43,9 @@ public class EmailVerificationService : IEmailVerificationService
       if (user is null) return false;
 
       if (user.Id != data.UserId) return false;
-      if (user.IsEmailVerified == true) return false;
+      if (user.UserDetails.Role != Role.UNVALIDATED_USER) return false;
 
-      user.IsEmailVerified = true;
+      user.UserDetails.Role = Role.VALIDATED_USER;
       await userService.UpdateUser(user);
       return true;
     }

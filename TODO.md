@@ -4,3 +4,8 @@
 - Tie everything into the front-end
 - Logging
 - Maybe remove "isEmailValidated" from UserModel now that that information is contained in role?
+- Ensure everything still works in production
+  - Especially the email verification html template, the Path will probably be an issue
+- Create a new class for incoming new user requests that does not include Role
+  - CreateNewUser role should always be UNVALIDATED_USER, this request needs no validation
+  - CreateNewAdmin role should always be ADMIN, this request is only callable by a super admin

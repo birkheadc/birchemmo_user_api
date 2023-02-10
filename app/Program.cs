@@ -14,6 +14,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserViewService, UserViewService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IEmailVerificationService, EmailVerificationService>();
 
 if (builder.Environment.IsDevelopment())
 {

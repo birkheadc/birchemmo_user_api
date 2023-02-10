@@ -32,8 +32,7 @@ public class EmailVerificationServiceTests
       "i_dont_exist",
       "hashed_password_is_not_actually_hashed_wow",
       "bad@user.model",
-      Role.UNVALIDATED_USER,
-      false
+      Role.UNVALIDATED_USER
     );
 
     TokenWrapper? token = await service.GenerateForUser(user);
@@ -69,7 +68,7 @@ public class EmailVerificationServiceTests
     TokenWrapper? token = await service.GenerateForUser(user);
     Assert.NotNull(token);
 
-    bool isValid = await service.Validate(token);
+    bool isValid = await service.ValidateUser(token);
     Assert.True(isValid);
   }
 
@@ -83,8 +82,7 @@ public class EmailVerificationServiceTests
       username,
       BCrypt.Net.BCrypt.HashPassword(password),
       username + "@site.com",
-      Role.UNVALIDATED_USER,
-      false
+      Role.UNVALIDATED_USER
     ));
 
     return new UserService(repository);

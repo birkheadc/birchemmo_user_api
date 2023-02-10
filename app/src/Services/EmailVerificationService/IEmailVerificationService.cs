@@ -5,5 +5,5 @@ namespace BircheMmoUserApi.Services;
 public interface IEmailVerificationService
 {
   public Task<TokenWrapper?> GenerateForUser(UserModel user);
-  public Task<bool> Validate(TokenWrapper token);
+  public Task<bool> ValidateUser(TokenWrapper token);
 }

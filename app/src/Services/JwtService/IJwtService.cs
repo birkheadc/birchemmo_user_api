@@ -5,6 +5,6 @@ namespace BircheMmoUserApi.Services;
 
 public interface IJwtService
 {
-  public TokenWrapper GenerateToken(TokenData data);
+  public TokenWrapper GenerateToken(TokenData data, TimeSpan expires);
   public TokenData? ValidateToken(TokenWrapper token);
 }

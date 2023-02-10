@@ -19,22 +19,22 @@ public class JwtService : IJwtService
     tokenHandler = new();
   }
 
-  public TokenWrapper GenerateToken(TokenData data)
+  public TokenWrapper GenerateToken(TokenData data, TimeSpan duration)
   {
-    SecurityToken token = tokenHandler.CreateToken(GetSecurityTokenDescriptor(data));
+    SecurityToken token = tokenHandler.CreateToken(GetSecurityTokenDescriptor(data, duration));
     return new TokenWrapper(
       tokenHandler.WriteToken(token)
     );
   }
 
-  private SecurityTokenDescriptor GetSecurityTokenDescriptor(TokenData data)
+  private SecurityTokenDescriptor GetSecurityTokenDescriptor(TokenData data, TimeSpan duration)
   {
     Dictionary<string, object> claims = new();
     claims.Add("userId", data.UserId);
     claims.Add("tokenType", data.TokenType);
     return new SecurityTokenDescriptor()
     {
-      Expires = DateTime.UtcNow.Add(jwtConfig.Expires),
+      Expires = DateTime.UtcNow.Add(duration),
       Issuer = jwtConfig.Issuer,
       Audience = jwtConfig.Audience,
       SigningCredentials = new(
