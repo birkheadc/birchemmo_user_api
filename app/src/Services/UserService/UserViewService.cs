@@ -20,6 +20,12 @@ public class UserViewService : IUserViewService
     return ToViewModel(userModel);
   }
 
+  public async Task<UserViewModel?> CreateAdmin(NewUserModel user)
+  {
+    UserModel? userModel = await userService.CreateUser(user, Role.ADMIN);
+    return ToViewModel(userModel);
+  }
+
   public async Task DeleteUserById(string id)
   {
     await DeleteUserById(ObjectId.Parse(id));

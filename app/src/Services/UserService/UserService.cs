@@ -15,9 +15,9 @@ public class UserService : IUserService
     converter = new();
   }
 
-  public async Task<UserModel?> CreateUser(NewUserModel user)
+  public async Task<UserModel?> CreateUser(NewUserModel user, Role role = Role.UNVALIDATED_USER)
   {
-    UserModel userModel = ToUserModel(user);
+    UserModel userModel = ToUserModel(user, role);
     UserModel? returnUser = await userRepository.CreateUser(userModel);
     return returnUser;
   }
@@ -55,9 +55,9 @@ public class UserService : IUserService
     return user;
   }
 
-  private UserModel ToUserModel(NewUserModel newUserModel)
+  private UserModel ToUserModel(NewUserModel newUserModel, Role role)
   {
-    UserModel userModel = converter.ToUserModel(newUserModel);
+    UserModel userModel = converter.ToUserModel(newUserModel, role);
     return userModel;
   }
 }

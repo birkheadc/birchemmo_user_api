@@ -130,7 +130,7 @@ public class InMemoryUserRepositoryTests
       "oldcheddar",
       "passw0rd",
       "oldcheddar@site.com",
-      Role.ADMIN
+      Role.UNVALIDATED_ADMIN
     );
 
     await repository.CreateUser(newUser);
@@ -141,7 +141,7 @@ public class InMemoryUserRepositoryTests
   }
 
   [Theory]
-  [InlineData("oldcheddar", Role.ADMIN)]
+  [InlineData("oldcheddar", Role.UNVALIDATED_ADMIN)]
   [InlineData("newcheddar", Role.UNVALIDATED_USER)]
   public async Task CreateUser_FindUserByUsername_Returns_Created_User(string username, Role role)
   {
@@ -252,7 +252,7 @@ public class InMemoryUserRepositoryTests
       "oldcheddar",
       "passw0rd",
       "oldcheddar@site.com",
-      Role.ADMIN
+      Role.UNVALIDATED_ADMIN
     );
 
     await repository.CreateUser(newUser);
@@ -261,7 +261,7 @@ public class InMemoryUserRepositoryTests
 
     Assert.NotNull(userModel);
     Assert.Equal("oldcheddar", userModel.UserDetails.Username);
-    Assert.Equal(Role.ADMIN, userModel.UserDetails.Role);
+    Assert.Equal(Role.UNVALIDATED_ADMIN, userModel.UserDetails.Role);
 
     UserViewModel updateUser = new(
       id.ToString(),
@@ -290,7 +290,7 @@ public class InMemoryUserRepositoryTests
       "oldcheddar",
       "passw0rd",
       "oldcheddar@site.com",
-      Role.ADMIN
+      Role.UNVALIDATED_ADMIN
     );
 
     await repository.CreateUser(newUser);

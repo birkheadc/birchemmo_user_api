@@ -11,7 +11,7 @@ namespace BircheMmoUserApiUnitTests.Mocks.Services;
 public class MockUserService_ReturnsGoodData : IUserService
 {
   private readonly IUserRepository repository = new MockUserRepository_ReturnsGoodData();
-  public async Task<UserModel?> CreateUser(NewUserModel user)
+  public async Task<UserModel?> CreateUser(NewUserModel user, Role role = Role.UNVALIDATED_USER)
   {
     UserModel userModel = new(
       ObjectId.GenerateNewId(),

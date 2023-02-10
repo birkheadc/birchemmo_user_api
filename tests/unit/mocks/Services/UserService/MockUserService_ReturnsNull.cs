@@ -9,7 +9,7 @@ namespace BircheMmoUserApiUnitTests.Mocks.Services;
 #pragma warning disable 1998
 public class MockUserService_ReturnsNull : IUserService
 {
-  public async Task<UserModel?> CreateUser(NewUserModel user)
+  public async Task<UserModel?> CreateUser(NewUserModel user, Role role = Role.UNVALIDATED_USER)
   {
     return null;
   }

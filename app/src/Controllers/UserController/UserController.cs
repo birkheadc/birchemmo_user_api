@@ -81,6 +81,23 @@ public class UserController : ControllerBase
     }
   }
 
+  [HttpPost]
+  [Route("new-admin")]
+  [SessionTokenAuthorize(Role.SUPER_ADMIN)]
+  public async Task<ActionResult<UserViewModel>> CreateAdmin([FromBody] NewUserModel user)
+  {
+    try
+    {
+      UserViewModel? userViewModel = await userService.CreateUser(user);
+      if (userViewModel is null) return StatusCode(9002);
+      return Ok(userViewModel);
+    }
+    catch
+    {
+      return StatusCode(9001);
+    }
+  }
+
   [HttpDelete]
   [Route("delete/{id}")]
   [SessionTokenAuthorize(Role.ADMIN)]

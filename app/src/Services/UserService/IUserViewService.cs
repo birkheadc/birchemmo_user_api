@@ -13,6 +13,7 @@ public interface IUserViewService
   public Task<UserViewModel?> GetUserById(string id);
   public Task<UserViewModel?> GetUserById(ObjectId id);
   public Task<UserViewModel?> CreateUser(NewUserModel user);
+  public Task<UserViewModel?> CreateAdmin(NewUserModel user);
   public Task DeleteUserById(ObjectId id);
   public Task DeleteUserById(string id);
   public Task UpdateUser(UserViewModel user);

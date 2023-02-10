@@ -116,7 +116,7 @@ public class SessionTokenAuthAttributeTests
   public async Task OnActionExecutionAsync_Result_Is_Unauthorized_When_Role_Is_Insufficient()
   {
     ISessionService mockSessionService = GetMockSessionService();
-    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(Role.ADMIN);
+    SessionTokenAuthorizeAttribute sessionTokenAuthorizeAttribute = new(Role.UNVALIDATED_ADMIN);
 
     Credentials credentials = new(
       "validated_user",

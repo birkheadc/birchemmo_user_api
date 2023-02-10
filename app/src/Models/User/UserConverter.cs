@@ -15,14 +15,14 @@ public class UserConverter
     );
   }
 
-  public UserModel ToUserModel(NewUserModel newUserModel)
+  public UserModel ToUserModel(NewUserModel newUserModel, Role role)
   {
     UserModel userModel = new(
       ObjectId.GenerateNewId(),
       newUserModel.Credentials.Username,
       BCrypt.Net.BCrypt.HashPassword(newUserModel.Credentials.Password),
       newUserModel.EmailAddress,
-      Role.UNVALIDATED_USER
+      role
     );
 
     return userModel;
