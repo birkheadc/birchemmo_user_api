@@ -86,7 +86,7 @@ public class UserControllerTests
     );
 
     WebApplicationFactory<Program> app = new MockWebApplicationFactoryBuilder()
-      .WithSeedUser(credentials, Role.UNVALIDATED_ADMIN)
+      .WithSeedUser(credentials, Role.ADMIN)
       .Build();
     HttpClient client = app.CreateClient();
 
