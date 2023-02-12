@@ -26,8 +26,7 @@ public class JwtServiceTests
       new TokenData(
         ObjectId.Empty,
         TokenType.Login
-      ),
-      TimeSpan.FromMinutes(5)
+      )
     );
 
     Assert.NotNull(token);
@@ -46,8 +45,7 @@ public class JwtServiceTests
       new TokenData(
         id,
         tokenType
-      ),
-      TimeSpan.FromMinutes(5)
+      )
     );
 
     TokenData? data = service.ValidateToken(token);

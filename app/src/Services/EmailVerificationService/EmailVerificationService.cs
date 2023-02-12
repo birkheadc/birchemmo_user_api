@@ -27,8 +27,7 @@ public class EmailVerificationService : IEmailVerificationService
       new TokenData(
         user.Id,
         TokenType.EmailVerification
-      ),
-      TimeSpan.FromHours(24)
+      )
     );
   }
 
