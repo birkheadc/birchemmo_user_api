@@ -10,13 +10,9 @@ public record UserViewModel
   public UserDetails UserDetails { get; set; }
   public string Id { get; set; }
 
-  public UserViewModel(string id, string username, string emailAddress, Role role)
+  public UserViewModel(string id, UserDetails userDetails)
   {
-    UserDetails = new(
-      username,
-      emailAddress,
-      role
-    );
+    UserDetails = userDetails;
     Id = id;
   }
 }

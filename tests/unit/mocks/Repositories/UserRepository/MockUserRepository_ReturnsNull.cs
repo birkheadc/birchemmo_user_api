@@ -20,11 +20,6 @@ public class MockUserRepository_ReturnsNull : IUserRepository
     throw new System.NotImplementedException();
   }
 
-  public Task UpdateUser(UserViewModel user)
-  {
-    throw new System.NotImplementedException();
-  }
-
   public async Task<IEnumerable<UserModel>> FindAllUsers()
   {
     return new List<UserModel>();
@@ -40,7 +35,12 @@ public class MockUserRepository_ReturnsNull : IUserRepository
     return null;
   }
 
-  public Task UpdateUser(UserModel user)
+  public Task UpdatePassword(ObjectId id, string newPassword)
+  {
+    throw new System.NotImplementedException();
+  }
+
+  public Task UpdateUserDetails(ObjectId id, UserDetails userDetails)
   {
     throw new System.NotImplementedException();
   }

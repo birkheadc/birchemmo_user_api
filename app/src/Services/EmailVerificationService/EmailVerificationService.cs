@@ -46,7 +46,7 @@ public class EmailVerificationService : IEmailVerificationService
       if (user.UserDetails.Role != Role.UNVALIDATED_USER) return false;
 
       user.UserDetails.Role = Role.VALIDATED_USER;
-      await userService.UpdateUser(user);
+      await userService.UpdateUserDetails(user.Id, user.UserDetails);
       return true;
     }
     catch

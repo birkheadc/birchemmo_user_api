@@ -6,6 +6,7 @@ using BircheMmoUserApiUnitTests.Mocks.Services;
 using BircheMmoUserApiUnitTests.Mocks.Config;
 using MongoDB.Bson;
 using Xunit;
+using BircheMmoUserApiUnitTests.Mocks.Builders;
 
 namespace BircheMmoUserApiUnitTests.Services;
 
@@ -29,7 +30,12 @@ public class SessionServiceTests
     string username = "oldcheddar";
     string password = "password";
 
-    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithCredentials(
+      new Credentials(
+        username,
+        password
+      )
+    );
 
     Assert.NotNull(await userService.GetUserByUsername(username));
 
@@ -52,7 +58,12 @@ public class SessionServiceTests
     string username = "oldcheddar";
     string password = "password";
 
-    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithCredentials(
+      new Credentials(
+        username,
+        password
+      )
+    );
 
     Assert.NotNull(await userService.GetUserByUsername(username));
 
@@ -75,7 +86,12 @@ public class SessionServiceTests
     string username = "oldcheddar";
     string password = "password";
 
-    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithCredentials(
+      new Credentials(
+        username,
+        password
+      )
+    );
 
     SessionService service = new(
       userService,
@@ -96,7 +112,12 @@ public class SessionServiceTests
     string username = "oldcheddar";
     string password = "password";
 
-    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithCredentials(
+      new Credentials(
+        username,
+        password
+      )
+    );
 
     SessionService service = new(
       userService,
@@ -117,18 +138,17 @@ public class SessionServiceTests
     Assert.Equal(username, user.UserDetails.Username);
   }
 
-  private async Task<UserService> GetUserServiceWithUserAndPassword(string username, string password)
+  private async Task<UserService> GetUserServiceWithCredentials(Credentials credentials)
   {
 
     InMemoryUserRepository repository = new();
 
-    await repository.CreateUser(new UserModel(
-      ObjectId.GenerateNewId(),
-      username,
-      BCrypt.Net.BCrypt.HashPassword(password),
-      username + "@site.com",
-      Role.UNVALIDATED_USER
-    ));
+    await repository.CreateUser(
+      new MockUserModelBuilder()
+        .WithUsername(credentials.Username)
+        .WithPassword(credentials.Password)
+        .Build()
+    );
 
     return new UserService(repository);
   }

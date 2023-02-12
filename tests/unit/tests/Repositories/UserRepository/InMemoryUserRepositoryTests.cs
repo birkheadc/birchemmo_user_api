@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BircheMmoUserApi.Models;
 using BircheMmoUserApi.Repositories;
+using BircheMmoUserApiUnitTests.Mocks.Builders;
 using MongoDB.Bson;
 using Xunit;
 
@@ -54,13 +55,8 @@ public class InMemoryUserRepositoryTests
   {
     InMemoryUserRepository repository = new();
 
-    UserModel newUser = new(
-      ObjectId.GenerateNewId(),
-      "oldcheddar",
-      "password",
-      "oldcheddar@site.com",
-      Role.UNVALIDATED_USER
-    );
+    UserModel newUser = new MockUserModelBuilder()
+      .Build();
 
     UserModel? model = await repository.CreateUser(newUser);
     Assert.NotNull(model);
@@ -74,13 +70,8 @@ public class InMemoryUserRepositoryTests
   {
     InMemoryUserRepository repository = new();
 
-    UserModel newUser = new(
-      ObjectId.GenerateNewId(),
-      "oldcheddar",
-      "password",
-      "oldcheddar@site.com",
-      Role.UNVALIDATED_USER
-    );
+    UserModel newUser = new MockUserModelBuilder()
+      .Build();
 
     await repository.CreateUser(newUser);
     await repository.CreateUser(newUser);
@@ -95,21 +86,15 @@ public class InMemoryUserRepositoryTests
   {
     InMemoryUserRepository repository = new();
 
-    UserModel newUser = new(
-      ObjectId.GenerateNewId(),
-      "oldcheddar",
-      "password",
-      "oldcheddar@site.com",
-      Role.UNVALIDATED_USER
-    );
+    string emailAddress = "repeat@site.com";
 
-    UserModel repeatUser = new(
-      ObjectId.GenerateNewId(),
-      "newcheddar",
-      "password",
-      "oldcheddar@site.com",
-      Role.UNVALIDATED_USER
-    );
+    UserModel newUser = new MockUserModelBuilder()
+      .WithEmailAddress(emailAddress)
+      .Build();
+
+    UserModel repeatUser = new MockUserModelBuilder()
+      .WithEmailAddress(emailAddress)
+      .Build();
 
     await repository.CreateUser(newUser);
     await repository.CreateUser(repeatUser);
@@ -124,14 +109,10 @@ public class InMemoryUserRepositoryTests
   {
     InMemoryUserRepository repository = new();
 
-    ObjectId id = ObjectId.GenerateNewId();
-    UserModel newUser = new(
-      id,
-      "oldcheddar",
-      "passw0rd",
-      "oldcheddar@site.com",
-      Role.ADMIN
-    );
+    UserModel newUser = new MockUserModelBuilder()
+      .Build();
+
+    ObjectId id = newUser.Id;
 
     await repository.CreateUser(newUser);
 
@@ -147,13 +128,10 @@ public class InMemoryUserRepositoryTests
   {
     InMemoryUserRepository repository = new();
 
-    UserModel newUser = new(
-      ObjectId.GenerateNewId(),
-      username,
-      "passw0rd",
-      username + "@place.com",
-      role
-    );
+    UserModel newUser = new MockUserModelBuilder()
+      .WithUsername(username)
+      .WithRole(role)
+      .Build();
 
     await repository.CreateUser(newUser);
 
@@ -242,96 +220,116 @@ public class InMemoryUserRepositoryTests
   }
 
   [Fact]
-  public async Task UpdateUser_Updates_Values()
+  public async Task UpdateUserDetails_Updates_User_Details()
   {
     InMemoryUserRepository repository = new();
     
-    ObjectId id = ObjectId.GenerateNewId();
-    UserModel newUser = new(
-      id,
-      "oldcheddar",
-      "passw0rd",
-      "oldcheddar@site.com",
-      Role.ADMIN
-    );
+    UserModel newUser = new MockUserModelBuilder()
+      .WithUsername("old")
+      .WithRole(Role.ADMIN)
+      .Build();
+
+    ObjectId id = newUser.Id;
 
     await repository.CreateUser(newUser);
 
     UserModel? userModel = await repository.FindUserById(id);
 
     Assert.NotNull(userModel);
-    Assert.Equal("oldcheddar", userModel.UserDetails.Username);
+    Assert.Equal("old", userModel.UserDetails.Username);
     Assert.Equal(Role.ADMIN, userModel.UserDetails.Role);
 
-    UserViewModel updateUser = new(
-      id.ToString(),
-      "newcheddar",
-      "newcheddar@site.com",
-      Role.UNVALIDATED_USER
-    );
-    await repository.UpdateUser(updateUser);
+    UserDetails updatedUserDetails = CopyUserDetails(newUser.UserDetails);
+    updatedUserDetails.Username = "new";
+    updatedUserDetails.Role = Role.UNVALIDATED_USER;
 
-    userModel = await repository.FindUserByUsername("oldcheddar");
+    await repository.UpdateUserDetails(id, updatedUserDetails);
+
+    userModel = await repository.FindUserByUsername("old");
     Assert.Null(userModel);
 
     userModel = await repository.FindUserById(id);
     Assert.NotNull(userModel);
-    Assert.Equal("newcheddar", userModel.UserDetails.Username);
+    Assert.Equal("new", userModel.UserDetails.Username);
     Assert.Equal(Role.UNVALIDATED_USER, userModel.UserDetails.Role);
   }
 
   [Fact]
-  public async Task UpdateUser_Does_Nothing_If_User_Not_Found()
+  public async Task UpdateUserDetails_Does_Nothing_If_User_Not_Found()
   {
     InMemoryUserRepository repository = new();
     
-    UserModel newUser = new(
-      ObjectId.GenerateNewId(),
-      "oldcheddar",
-      "passw0rd",
-      "oldcheddar@site.com",
-      Role.ADMIN
-    );
+    UserModel newUser = new MockUserModelBuilder()
+      .WithUsername("old")
+      .Build();
 
     await repository.CreateUser(newUser);
 
-    UserViewModel updateUser = new(
-      ObjectId.Empty.ToString(),
-      "newcheddar",
-      "newcheddar@site.com",
-      Role.UNVALIDATED_USER
-    );
-    await repository.UpdateUser(updateUser);
-
-    UserModel? user = await repository.FindUserByUsername("oldcheddar");
+    UserModel? user = await repository.FindUserByUsername("old");
     Assert.NotNull(user);
+
+    UserDetails updatedUserDetails = CopyUserDetails(newUser.UserDetails);
+    updatedUserDetails.Username = "new";
+    
+    await repository.UpdateUserDetails(ObjectId.GenerateNewId(), updatedUserDetails);
+
+    user = await repository.FindUserByUsername("old");
+    Assert.NotNull(user);
+
+    user = await repository.FindUserByUsername("new");
+    Assert.Null(user);
   }
 
   [Fact]
-  public async Task UpdateUser_WithUserModel_UpdatesUser()
+  public async Task UpdatePassword_Updates_Password()
   {
     InMemoryUserRepository repository = new();
     
-    UserModel newUser = new(
-      ObjectId.GenerateNewId(),
-      "oldcheddar",
-      "passw0rd",
-      "oldcheddar@site.com",
-      Role.UNVALIDATED_USER
-    );
+    UserModel newUser = new MockUserModelBuilder()
+      .WithUsername("old")
+      .WithPassword("oldpassword")
+      .Build();
+
+    Assert.True(BCrypt.Net.BCrypt.Verify("oldpassword", newUser.HashedPassword));
 
     await repository.CreateUser(newUser);
 
-    UserModel? user = await repository.FindUserById(newUser.Id);
+    UserModel? user = await repository.FindUserByUsername("old");
     Assert.NotNull(user);
-    Assert.Equal(Role.UNVALIDATED_USER, user.UserDetails.Role);
+    
+    await repository.UpdatePassword(newUser.Id, "newpassword");
 
-    newUser.UserDetails.Role = Role.VALIDATED_USER;
-    await repository.UpdateUser(newUser);
-
-    user = await repository.FindUserById(newUser.Id);
+    user = await repository.FindUserByUsername("old");
     Assert.NotNull(user);
-    Assert.Equal(Role.VALIDATED_USER, user.UserDetails.Role);
+
+    Assert.False(BCrypt.Net.BCrypt.Verify("oldpassword", newUser.HashedPassword));
+    Assert.True(BCrypt.Net.BCrypt.Verify("newpassword", newUser.HashedPassword));
+  }
+
+  [Fact]
+  public async Task UpdatePassword_Does_Nothing_If_User_Not_Found()
+  {
+    InMemoryUserRepository repository = new();
+    
+    UserModel newUser = new MockUserModelBuilder()
+      .WithUsername("old")
+      .WithPassword("oldpassword")
+      .Build();
+
+    Assert.True(BCrypt.Net.BCrypt.Verify("oldpassword", newUser.HashedPassword));
+
+    await repository.CreateUser(newUser);
+
+    UserModel? user = await repository.FindUserByUsername("old");
+    Assert.NotNull(user);
+    
+    await repository.UpdatePassword(ObjectId.GenerateNewId(), "newpassword");
+
+    user = await repository.FindUserByUsername("old");
+    Assert.NotNull(user);
+
+    Assert.True(BCrypt.Net.BCrypt.Verify("oldpassword", newUser.HashedPassword));
+    Assert.False(BCrypt.Net.BCrypt.Verify("newpassword", newUser.HashedPassword));
   }
 
   private List<UserModel> GenerateListOfNUserModels(int n)
@@ -339,14 +337,20 @@ public class InMemoryUserRepositoryTests
     List<UserModel> users = new();
     for (int i = 0; i < n; i++)
     {
-      users.Add(new(
-        ObjectId.GenerateNewId(),
-        "user_" + i.ToString(),
-        "passw0rd",
-        "user_" + i.ToString() + "@site.com",
-        Role.UNVALIDATED_USER
-      ));
+      users.Add(
+        new MockUserModelBuilder().Build()
+      );
     }
     return users;
+  }
+
+  private UserDetails CopyUserDetails(UserDetails original)
+  {
+    return new UserDetails(
+      original.Username,
+      original.EmailAddress,
+      original.Role,
+      original.SendMeUpdates
+    );
   }
 }

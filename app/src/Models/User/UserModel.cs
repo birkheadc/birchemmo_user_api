@@ -12,13 +12,9 @@ public record UserModel
   public ObjectId Id { get; set; }
   public string HashedPassword { get; set; }
 
-  public UserModel(ObjectId id, string username, string hashedPassword, string emailAddress, Role role)
+  public UserModel(ObjectId id, string hashedPassword, UserDetails userDetails)
   {
-    UserDetails = new(
-      username,
-      emailAddress,
-      role
-    );
+    UserDetails = userDetails;
     Id = id;
     HashedPassword = hashedPassword;
   }

@@ -40,6 +40,9 @@ builder.Services.AddSingleton(
 builder.Services.AddSingleton(
   builder.Configuration.GetSection("DbConfig").Get<DbConfig>()
 );
+builder.Services.AddSingleton(
+  builder.Configuration.GetSection("EmailVerificationConfig").Get<EmailVerificationConfig>()
+);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -74,6 +77,7 @@ if (app.Environment.IsStaging())
 if (app.Environment.IsProduction())
 {
   app.UseHttpsRedirection();
+  app.UseCors("All");
 }
 
 // app.UseAuthentication();

@@ -30,21 +30,10 @@ public class InMemoryUserRepository : IUserRepository
     users.Remove(id);
   }
 
-  public async Task UpdateUser(UserViewModel user)
+  public async Task UpdateUserDetails(ObjectId id, UserDetails userDetails)
   {
-    if (users.ContainsKey(ObjectId.Parse(user.Id)) == false) return;
-    users[ObjectId.Parse(user.Id)].UserDetails = user.UserDetails;
-  }
-
-  public async Task UpdateUser(UserModel user)
-  {
-    UserViewModel viewModel = new(
-      user.Id.ToString(),
-      user.UserDetails.Username,
-      user.UserDetails.EmailAddress,
-      user.UserDetails.Role
-    );
-    await UpdateUser(viewModel);
+    if (users.ContainsKey(id) == false) return;
+    users[id].UserDetails = userDetails;
   }
 
   public async Task<IEnumerable<UserModel>> FindAllUsers()
@@ -94,5 +83,11 @@ public class InMemoryUserRepository : IUserRepository
       if (pair.Value.UserDetails.EmailAddress == user.UserDetails.EmailAddress) return false;
     }
     return true;
+  }
+
+  public async Task UpdatePassword(ObjectId id, string newPassword)
+  {
+    if (users.ContainsKey(id) == false) return;
+    users[id].HashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
   }
 }

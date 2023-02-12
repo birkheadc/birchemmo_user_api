@@ -8,11 +8,13 @@ public record UserDetails
   public string Username { get; set; }
   public string EmailAddress { get; set; }
   public Role Role { get; set; }
-  
-  public UserDetails(string username, string emailAddress, Role role)
+  public bool SendMeUpdates { get; set; }
+
+  public UserDetails(string username, string emailAddress, Role role, bool sendMeUpdates)
   {
     Username = username;
     EmailAddress = emailAddress;
     Role = role;
+    SendMeUpdates = sendMeUpdates;
   }
 }

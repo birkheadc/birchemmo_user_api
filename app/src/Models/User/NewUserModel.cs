@@ -9,13 +9,12 @@ public record NewUserModel
 {
   public Credentials Credentials { get; set; }
   public string EmailAddress { get; set; }
+  public bool SendMeUpdates { get; set; }
 
-  public NewUserModel(string username, string emailAddress, string password)
+  public NewUserModel(Credentials credentials, string emailAddress, bool sendMeUpdates = false)
   {
-    Credentials = new(
-      username,
-      password
-    );
+    Credentials = credentials;
     EmailAddress = emailAddress;
+    SendMeUpdates = sendMeUpdates;
   }
 }

@@ -2,7 +2,7 @@ namespace BircheMmoUserApi.Config;
 
 public class DbConfig
 {
-  public string ConnectionString { get; set; } = "";
+  public string ConnectionString { get; set; } = Environment.GetEnvironmentVariable("ASPNETCORE_DBCONFIG_CONNECTION_STRING") ?? "";
   public string DatabaseName { get; set; } = "";
   public string UserCollectionName { get; set; } = "";
   /// <summary>

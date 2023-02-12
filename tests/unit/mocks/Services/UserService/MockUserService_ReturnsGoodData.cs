@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BircheMmoUserApi.Models;
 using BircheMmoUserApi.Repositories;
 using BircheMmoUserApi.Services;
+using BircheMmoUserApiUnitTests.Mocks.Builders;
 using BircheMmoUserApiUnitTests.Mocks.Repositories;
 using MongoDB.Bson;
 
@@ -13,24 +14,19 @@ public class MockUserService_ReturnsGoodData : IUserService
   private readonly IUserRepository repository = new MockUserRepository_ReturnsGoodData();
   public async Task<UserModel?> CreateUser(NewUserModel user, Role role = Role.UNVALIDATED_USER)
   {
-    UserModel userModel = new(
-      ObjectId.GenerateNewId(),
-      user.Credentials.Username,
-      HashPassword(user.Credentials.Password),
-      user.EmailAddress,
-      Role.UNVALIDATED_USER
-    );
+    UserModel userModel = new MockUserModelBuilder()
+      .WithRole(role)
+      .WithUsername(user.Credentials.Username)
+      .WithPassword(user.Credentials.Password)
+      .WithEmailAddress(user.EmailAddress)
+      .Build();
+
     return await repository.CreateUser(userModel);
   }
 
   public async Task DeleteUserById(ObjectId id)
   {
     await repository.DeleteUserById(id);
-  }
-
-  public async Task Update(UserViewModel user)
-  {
-    await repository.UpdateUser(user);
   }
 
   public async Task<IEnumerable<UserModel>> GetAllUsers()
@@ -53,12 +49,17 @@ public class MockUserService_ReturnsGoodData : IUserService
     return BCrypt.Net.BCrypt.HashPassword(password);
   }
 
-  public Task UpdateUser(UserViewModel user)
+  public Task UpdateUser(UserModel user)
   {
     throw new System.NotImplementedException();
   }
 
-  public Task UpdateUser(UserModel user)
+  public Task UpdateUserDetails(ObjectId id, UserDetails userDetails)
+  {
+    throw new System.NotImplementedException();
+  }
+
+  public Task UpdatePassword(ObjectId id, string password)
   {
     throw new System.NotImplementedException();
   }

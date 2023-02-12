@@ -16,6 +16,7 @@ public interface IUserViewService
   public Task<UserViewModel?> CreateAdmin(NewUserModel user);
   public Task DeleteUserById(ObjectId id);
   public Task DeleteUserById(string id);
-  public Task UpdateUser(UserViewModel user);
-  public Task UpdateUser(UserModel user);
+  public Task UpdateUserDetails(ObjectId id, UserDetails userDetails);
+  public Task UpdatePassword(ObjectId id, string password);
+  
 }

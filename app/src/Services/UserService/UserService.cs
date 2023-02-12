@@ -27,16 +27,6 @@ public class UserService : IUserService
     await userRepository.DeleteUserById(id);
   }
 
-  public async Task UpdateUser(UserViewModel user)
-  {
-    await userRepository.UpdateUser(user);
-  }
-
-  public async Task UpdateUser(UserModel user)
-  {
-    await userRepository.UpdateUser(user);
-  }
-
   public async Task<IEnumerable<UserModel>> GetAllUsers()
   {
     IEnumerable<UserModel> users = await userRepository.FindAllUsers();
@@ -53,6 +43,16 @@ public class UserService : IUserService
   {
     UserModel? user = await userRepository.FindUserByUsername(username);
     return user;
+  }
+
+  public async Task UpdatePassword(ObjectId id, string password)
+  {
+    await userRepository.UpdatePassword(id, password);
+  }
+
+  public async Task UpdateUserDetails(ObjectId id, UserDetails userDetails)
+  {
+    await userRepository.UpdateUserDetails(id, userDetails);
   }
 
   private UserModel ToUserModel(NewUserModel newUserModel, Role role)

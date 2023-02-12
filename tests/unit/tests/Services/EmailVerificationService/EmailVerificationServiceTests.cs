@@ -6,6 +6,7 @@ using Xunit;
 using BircheMmoUserApi.Repositories;
 using MongoDB.Bson;
 using BircheMmoUserApi.Models;
+using BircheMmoUserApiUnitTests.Mocks.Builders;
 
 namespace BircheMmoUserApiUnitTests.Services;
 
@@ -24,16 +25,14 @@ public class EmailVerificationServiceTests
   {
     string username = "oldcheddar";
     string password = "password";
-    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithCredentials(new Credentials(
+      username,
+      password
+    ));
     EmailVerificationService service = new(userService, GetJwtTokenService());
 
-    UserModel user = new(
-      ObjectId.GenerateNewId(),
-      "i_dont_exist",
-      "hashed_password_is_not_actually_hashed_wow",
-      "bad@user.model",
-      Role.UNVALIDATED_USER
-    );
+    UserModel user = new MockUserModelBuilder()
+      .Build();
 
     TokenWrapper? token = await service.GenerateForUser(user);
     Assert.Null(token);
@@ -44,7 +43,12 @@ public class EmailVerificationServiceTests
   {
     string username = "oldcheddar";
     string password = "password";
-    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithCredentials(
+      new Credentials(
+        username,
+        password
+      )
+    );
     EmailVerificationService service = new(userService, GetJwtTokenService());
 
     UserModel? user = await userService.GetUserByUsername(username);
@@ -59,11 +63,17 @@ public class EmailVerificationServiceTests
   {
     string username = "oldcheddar";
     string password = "password";
-    UserService userService = await GetUserServiceWithUserAndPassword(username, password);
+    UserService userService = await GetUserServiceWithCredentials(
+      new Credentials(
+        username,
+        password
+      )
+    );
     EmailVerificationService service = new(userService, GetJwtTokenService());
 
     UserModel? user = await userService.GetUserByUsername(username);
     Assert.NotNull(user);
+    user.UserDetails.Role = Role.UNVALIDATED_USER;
 
     TokenWrapper? token = await service.GenerateForUser(user);
     Assert.NotNull(token);
@@ -72,18 +82,17 @@ public class EmailVerificationServiceTests
     Assert.True(isValid);
   }
 
-  private async Task<UserService> GetUserServiceWithUserAndPassword(string username, string password)
+  private async Task<UserService> GetUserServiceWithCredentials(Credentials credentials)
   {
 
     InMemoryUserRepository repository = new();
 
-    await repository.CreateUser(new UserModel(
-      ObjectId.GenerateNewId(),
-      username,
-      BCrypt.Net.BCrypt.HashPassword(password),
-      username + "@site.com",
-      Role.UNVALIDATED_USER
-    ));
+    await repository.CreateUser(
+      new MockUserModelBuilder()
+        .WithUsername(credentials.Username)
+        .WithPassword(credentials.Password)
+        .Build()
+    );
 
     return new UserService(repository);
   }
