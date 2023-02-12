@@ -3,10 +3,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using BircheMmoUserApi.Models;
 using BircheMmoUserApi.Services;
-using BircheMmoUserApiIntegrationTests.Mocks;
+using BircheMmoUserApiIntegrationTests.Mocks.Factories;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson;
 using Xunit;
 
 namespace BircheMmoUserApiIntegrationTests.Controllers;

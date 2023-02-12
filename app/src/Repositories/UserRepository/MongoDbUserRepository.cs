@@ -56,7 +56,12 @@ public class MongoDbUserRepository : IUserRepository
     return await (await userCollection.FindAsync(user => user.UserDetails.Username == username)).FirstOrDefaultAsync();
   }
 
-  public Task UpdateUser(UserModel user)
+   public Task UpdateUserDetails(ObjectId id, UserDetails userDetails)
+  {
+    throw new NotImplementedException();
+  }
+
+  public Task UpdatePassword(ObjectId id, string newPassword)
   {
     throw new NotImplementedException();
   }

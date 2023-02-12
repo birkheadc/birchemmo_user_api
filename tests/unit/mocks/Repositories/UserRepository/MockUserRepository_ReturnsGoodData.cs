@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BircheMmoUserApi.Models;
 using BircheMmoUserApi.Repositories;
+using BircheMmoUserApiUnitTests.Mocks.Builders;
 using MongoDB.Bson;
 
 #pragma warning disable 1998
@@ -14,34 +15,36 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
 
   public MockUserRepository_ReturnsGoodData()
   {
-    users.Add(new UserModel(
-      ObjectId.GenerateNewId(),
-      "admin",
-      BCrypt.Net.BCrypt.HashPassword("password"),
-      "test@test.com",
-      Role.ADMIN
-    ));
-    users.Add(new UserModel(
-      ObjectId.GenerateNewId(),
-      "unvalidated_user",
-      BCrypt.Net.BCrypt.HashPassword("password"),
-      "example@example.com",
-      Role.UNVALIDATED_USER
-    ));
-    users.Add(new UserModel(
-      ObjectId.GenerateNewId(),
-      "validated_user",
-      BCrypt.Net.BCrypt.HashPassword("password"),
-      "user@place.extension",
-      Role.VALIDATED_USER
-    ));
-    users.Add(new UserModel(
-      ObjectId.GenerateNewId(),
-      "super_admin",
-      BCrypt.Net.BCrypt.HashPassword("password"),
-      "user_4@my.site",
-      Role.SUPER_ADMIN
-    ));
+    users.Add(
+      new MockUserModelBuilder()
+        .WithRole(Role.ADMIN)
+        .WithUsername("admin")
+        .Build()
+    );
+    users.Add(
+      new MockUserModelBuilder()
+        .WithRole(Role.UNVALIDATED_USER)
+        .WithUsername("unvalidated_user")
+        .Build()
+    );
+    users.Add(
+      new MockUserModelBuilder()
+        .WithRole(Role.VALIDATED_USER)
+        .WithUsername("validated_user")
+        .Build()
+    );
+    users.Add(
+      new MockUserModelBuilder()
+        .WithRole(Role.SUPER_ADMIN)
+        .WithUsername("super_admin")
+        .Build()
+    );
+    users.Add(
+      new MockUserModelBuilder()
+        .WithRole(Role.ADMIN)
+        .WithUsername("admin")
+        .Build()
+    );
   }
   public Task<UserModel?> CreateUser(UserModel user)
   {
@@ -49,11 +52,6 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
   }
 
   public Task DeleteUserById(ObjectId id)
-  {
-    throw new System.NotImplementedException();
-  }
-
-  public Task UpdateUser(UserViewModel user)
   {
     throw new System.NotImplementedException();
   }
@@ -87,7 +85,12 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
     }
   }
 
-  public Task UpdateUser(UserModel user)
+  public Task UpdateUserDetails(ObjectId id, UserDetails userDetails)
+  {
+    throw new NotImplementedException();
+  }
+
+  public Task UpdatePassword(ObjectId id, string newPassword)
   {
     throw new NotImplementedException();
   }

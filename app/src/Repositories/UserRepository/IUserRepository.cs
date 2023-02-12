@@ -10,6 +10,6 @@ public interface IUserRepository
   public Task<UserModel?> FindUserById(ObjectId id);
   public Task<UserModel?> CreateUser(UserModel user);
   public Task DeleteUserById(ObjectId id);
-  public Task UpdateUser(UserViewModel user);
-  public Task UpdateUser(UserModel user);
+  public Task UpdateUserDetails(ObjectId id, UserDetails userDetails);
+  public Task UpdatePassword(ObjectId id, string newPassword);
 }

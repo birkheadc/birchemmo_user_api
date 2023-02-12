@@ -8,12 +8,14 @@ namespace BircheMmoUserApi.Services;
 public class EmailService : IEmailService
 {
   private readonly EmailConfig emailConfig;
+  private readonly EmailVerificationConfig emailVerificationConfig;
   private readonly IEmailVerificationService emailVerificationService;
 
-  public EmailService(EmailConfig emailConfig, IEmailVerificationService emailVerificationService)
+  public EmailService(EmailConfig emailConfig, IEmailVerificationService emailVerificationService, EmailVerificationConfig emailVerificationConfig)
   {
     this.emailConfig = emailConfig;
     this.emailVerificationService = emailVerificationService;
+    this.emailVerificationConfig = emailVerificationConfig;
   }
 
   public async Task<bool> SendEmailAsync(string receiverName, string receiverAddress, string subject, string body)
@@ -42,6 +44,7 @@ public class EmailService : IEmailService
     TokenWrapper? verificationToken = await emailVerificationService.GenerateForUser(user);
     if (verificationToken is null) return null;
     string username = user.UserDetails.Username;
+    string verifyUrl = emailVerificationConfig.FrontEndUrl + "/" + emailVerificationConfig.VerifySubdirectory + "/" + verificationToken.Token;
     
     MimeMessage message = new();
 
@@ -57,13 +60,13 @@ public class EmailService : IEmailService
 
     BodyBuilder bodyBuilder = new();
 
-    string templatePath = "./assets/EmailVerificationTemplate/EmailVerificationTemplate.html";
+    string templatePath = emailVerificationConfig.HtmlTemplatePath;
     using (StreamReader reader = System.IO.File.OpenText(templatePath))
     {
       string html = reader.ReadToEnd();
       bodyBuilder.HtmlBody = html
         .Replace("{{username}}", username)
-        .Replace("{{verificationCode}}", verificationToken.Token);
+        .Replace("{{verifyUrl}}", verifyUrl);
     }
 
     message.Body = bodyBuilder.ToMessageBody();

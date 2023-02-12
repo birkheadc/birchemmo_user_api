@@ -9,9 +9,7 @@ public class UserConverter
     return new UserViewModel
     (
       userModel.Id.ToString(),
-      userModel.UserDetails.Username,
-      userModel.UserDetails.EmailAddress,
-      userModel.UserDetails.Role
+      userModel.UserDetails
     );
   }
 
@@ -19,10 +17,13 @@ public class UserConverter
   {
     UserModel userModel = new(
       ObjectId.GenerateNewId(),
-      newUserModel.Credentials.Username,
       BCrypt.Net.BCrypt.HashPassword(newUserModel.Credentials.Password),
-      newUserModel.EmailAddress,
-      role
+      new UserDetails(
+        newUserModel.Credentials.Username,
+        newUserModel.EmailAddress,
+        role,
+        newUserModel.SendMeUpdates
+      )
     );
 
     return userModel;

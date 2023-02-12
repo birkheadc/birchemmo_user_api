@@ -19,11 +19,6 @@ public class MockUserService_ReturnsNull : IUserService
     
   }
 
-  public async Task Update(UserViewModel user)
-  {
-
-  }
-
   public async Task<IEnumerable<UserModel>> GetAllUsers()
   {
     return new List<UserModel>();
@@ -39,12 +34,12 @@ public class MockUserService_ReturnsNull : IUserService
     return null;
   }
 
-  public Task UpdateUser(UserViewModel user)
+  public Task UpdatePassword(ObjectId id, string password)
   {
     throw new System.NotImplementedException();
   }
 
-  public Task UpdateUser(UserModel user)
+  public Task UpdateUserDetails(ObjectId id, UserDetails userDetails)
   {
     throw new System.NotImplementedException();
   }

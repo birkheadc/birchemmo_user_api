@@ -36,16 +36,6 @@ public class UserViewService : IUserViewService
     await userService.DeleteUserById(id);
   }
 
-  public async Task UpdateUser(UserViewModel user)
-  {
-    await userService.UpdateUser(user);
-  }
-
-  public async Task UpdateUser(UserModel user)
-  {
-    await userService.UpdateUser(user);
-  }
-
   public async Task<IEnumerable<UserViewModel>> GetAllUsers()
   {
     IEnumerable<UserModel> userModels = await userService.GetAllUsers();
@@ -83,5 +73,15 @@ public class UserViewService : IUserViewService
       userViewModels.Add(ToViewModel(userModel)!);
     }
     return userViewModels;
+  }
+
+  public async Task UpdateUserDetails(ObjectId id, UserDetails userDetails)
+  {
+    await userService.UpdateUserDetails(id, userDetails);
+  }
+
+  public async Task UpdatePassword(ObjectId id, string password)
+  {
+    await userService.UpdatePassword(id, password);
   }
 }

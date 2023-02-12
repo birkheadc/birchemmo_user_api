@@ -19,6 +19,12 @@ public class DebugController : ControllerBase
     this.userService = userService;
   }
 
+  [HttpGet]
+  public IActionResult TestConnection()
+  {
+    return Ok("If you can see this, you've reached the debug controller.");
+  }
+
   [HttpPost]
   [Route("test-email")]
   public async Task<IActionResult> SendTestEmail()
@@ -41,9 +47,11 @@ public class DebugController : ControllerBase
     try
     {
       NewUserModel newUser = new(
-        "oldcheddar",
-        "birkheadc@gmail.com",
-        "password"
+        new Credentials(
+          "oldcheddar",
+          "password"
+        ),
+        "birkheadc@gmail.com"
       );
       UserModel? user = await userService.CreateUser(newUser);
       if (user is null) return StatusCode(9003);
@@ -51,9 +59,9 @@ public class DebugController : ControllerBase
       bool didSend = await emailService.SendVerificationEmail(user);
       return didSend ? Ok() : StatusCode(9002);
     }
-    catch
+    catch(Exception e)
     {
-      return StatusCode(9001);
+      return BadRequest(e.Message);
     }
   }
 }

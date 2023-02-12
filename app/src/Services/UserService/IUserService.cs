@@ -13,6 +13,6 @@ public interface IUserService
   public Task<UserModel?> GetUserById(ObjectId id);
   public Task<UserModel?> CreateUser(NewUserModel user, Role role = Role.UNVALIDATED_USER);
   public Task DeleteUserById(ObjectId id);
-  public Task UpdateUser(UserViewModel user);
-  public Task UpdateUser(UserModel user);
+  public Task UpdateUserDetails(ObjectId id, UserDetails userDetails);
+  public Task UpdatePassword(ObjectId id, string password);
 }
