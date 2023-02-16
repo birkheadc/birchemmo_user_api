@@ -13,6 +13,16 @@ public class UserConverter
     );
   }
 
+  public IEnumerable<UserViewModel> ToUserViewModels(IEnumerable<UserModel> userModels)
+  {
+    List<UserViewModel> userViewModels = new();
+    foreach (UserModel userModel in userModels)
+    {
+      userViewModels.Add(ToUserViewModel(userModel));
+    }
+    return userViewModels;
+  }
+
   public UserModel ToUserModel(NewUserModel newUserModel, Role role)
   {
     UserModel userModel = new(

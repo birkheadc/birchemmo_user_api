@@ -12,13 +12,15 @@ namespace BircheMmoUserApi.Controllers;
 [Route("api/user")]
 public class UserController : ControllerBase
 {
-  private readonly IUserViewService userService;
+  private readonly IUserService userService;
   private readonly UserConverter converter;
+  private readonly IEmailService emailService;
 
-  public UserController(IUserViewService userService)
+  public UserController(IUserService userService, IEmailService emailService)
   {
     this.userService = userService;
     converter = new();
+    this.emailService = emailService;
   }
 
   [HttpGet]
@@ -30,8 +32,9 @@ public class UserController : ControllerBase
     {
       Console.WriteLine("Get All Users Called!");
       
-      IEnumerable<UserViewModel> users = await userService.GetAllUsers();
-      return Ok(users);
+      IEnumerable<UserModel> users = await userService.GetAllUsers();
+
+      return Ok(converter.ToUserViewModels(users));
     }
     catch
     {
@@ -46,9 +49,9 @@ public class UserController : ControllerBase
   {
     try
     {
-      UserViewModel? user = await userService.GetUserById(id);
+      UserModel? user = await userService.GetUserById(ObjectId.Parse(id));
       if (user is null) return NotFound();
-      return Ok(user);
+      return Ok(converter.ToUserViewModel(user));
     }
     catch
     {
@@ -60,9 +63,9 @@ public class UserController : ControllerBase
   [SessionTokenAuthorize(Role.UNVALIDATED_USER)]
   public async Task<ActionResult<UserViewModel>> GetUserSelf()
   {
-    UserViewModel? requestUser = GetRequestUser();
+    UserModel? requestUser = GetRequestUser();
     if (requestUser is null) return Unauthorized();
-    return Ok(requestUser);
+    return Ok(converter.ToUserViewModel(requestUser));
   }
 
   [HttpPost]
@@ -71,9 +74,10 @@ public class UserController : ControllerBase
   {
     try
     {
-      UserViewModel? userViewModel = await userService.CreateUser(user);
-      if (userViewModel is null) return StatusCode(9002);
-      return Ok(userViewModel);
+      UserModel? userModel = await userService.CreateUser(user);
+      if (userModel is null) return StatusCode(9002);
+      await emailService.SendVerificationEmail(userModel);
+      return Ok(converter.ToUserViewModel(userModel));
     }
     catch
     {
@@ -88,9 +92,10 @@ public class UserController : ControllerBase
   {
     try
     {
-      UserViewModel? userViewModel = await userService.CreateUser(user);
-      if (userViewModel is null) return StatusCode(9002);
-      return Ok(userViewModel);
+      // Todo: does this even create an admin???
+      UserModel? userModel = await userService.CreateUser(user);
+      if (userModel is null) return StatusCode(9002);
+      return Ok(converter.ToUserViewModel(userModel));
     }
     catch
     {
@@ -130,13 +135,12 @@ public class UserController : ControllerBase
     return NotFound();
   }
 
-  private UserViewModel? GetRequestUser()
+  private UserModel? GetRequestUser()
   {
     try
     {
       UserModel? userModel = HttpContext.Items["requestUser"] as UserModel;
-      if (userModel is null) return null;
-      return converter.ToUserViewModel(userModel);
+      return userModel;
     }
     catch
     {

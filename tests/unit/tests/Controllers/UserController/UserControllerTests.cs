@@ -15,7 +15,7 @@ public class UserControllerTests
   [Fact]
   public void Controller_Resolves()
   {
-    UserController controller = new(GetUserViewService_ReturnsGoodData());
+    UserController controller = new(GetUserService_ReturnsGoodData(), new MockEmailService_DoesNothing());
 
     Assert.NotNull(controller);
   }
@@ -23,7 +23,7 @@ public class UserControllerTests
   [Fact]
   public async Task GetAllUsers_Returns_Empty_List_When_No_Users()
   {
-    UserController controller = new(GetUserViewService_ReturnsNull());
+    UserController controller = new(GetUserService_ReturnsNull(), new MockEmailService_DoesNothing());
 
     OkObjectResult? result = (await controller.GetAllUsers()).Result as OkObjectResult;
     Assert.NotNull(result);
@@ -36,7 +36,7 @@ public class UserControllerTests
   [Fact]
   public async Task GetAllUsers_Returns_List_When_Users_Exist()
   {
-    UserController controller = new(GetUserViewService_ReturnsGoodData());
+    UserController controller = new(GetUserService_ReturnsGoodData(), new MockEmailService_DoesNothing());
 
     OkObjectResult? result = (await controller.GetAllUsers()).Result as OkObjectResult;
     Assert.NotNull(result);
@@ -49,7 +49,7 @@ public class UserControllerTests
   [Fact]
   public async Task GetUserById_Returns_NotFound_When_Empty()
   {
-    UserController controller = new(GetUserViewService_ReturnsNull());
+    UserController controller = new(GetUserService_ReturnsNull(), new MockEmailService_DoesNothing());
     NotFoundResult? result = (await controller.GetUserById(ObjectId.Empty.ToString())).Result as NotFoundResult;
     Assert.NotNull(result);
   }
@@ -57,7 +57,7 @@ public class UserControllerTests
   [Fact]
   public async Task GetUserById_Returns_NotFound_When_Not_Exist()
   {
-    UserController controller = new(GetUserViewService_ReturnsGoodData());
+    UserController controller = new(GetUserService_ReturnsGoodData(), new MockEmailService_DoesNothing());
     NotFoundResult? result = (await controller.GetUserById(ObjectId.Empty.ToString())).Result as NotFoundResult;
     Assert.NotNull(result);
   }
@@ -65,10 +65,10 @@ public class UserControllerTests
   [Fact]
   public async Task GetUserById_Returns_User_When_Exist()
   {
-    UserViewService service = (UserViewService)GetUserViewService_ReturnsGoodData();
-    ObjectId id = ObjectId.Parse(((List<UserViewModel>)await service.GetAllUsers())[0].Id);
+    IUserService service = GetUserService_ReturnsGoodData();
+    ObjectId id = ((List<UserModel>)await service.GetAllUsers())[0].Id;
 
-    UserController controller = new(service);
+    UserController controller = new(service, new MockEmailService_DoesNothing());
     OkObjectResult? result = (await controller.GetUserById(id.ToString())).Result as OkObjectResult;
     Assert.NotNull(result);
 
@@ -76,13 +76,13 @@ public class UserControllerTests
     Assert.NotNull(user);
   }
 
-  private IUserViewService GetUserViewService_ReturnsGoodData()
+  private IUserService GetUserService_ReturnsGoodData()
   {
-    return new UserViewService(new MockUserService_ReturnsGoodData());
+    return new MockUserService_ReturnsGoodData();
   }
 
-  private IUserViewService GetUserViewService_ReturnsNull()
+  private IUserService GetUserService_ReturnsNull()
   {
-    return new UserViewService(new MockUserService_ReturnsNull());
+    return new MockUserService_ReturnsNull();
   }
 }
