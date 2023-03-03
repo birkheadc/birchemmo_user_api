@@ -25,6 +25,11 @@ public class MockUserRepository_ReturnsNull : IUserRepository
     return new List<UserModel>();
   }
 
+  public Task<UserModel?> FindUserByEmailAddress(string emailAddress)
+  {
+    throw new System.NotImplementedException();
+  }
+
   public async Task<UserModel?> FindUserById(ObjectId id)
   {
     return null;

@@ -63,4 +63,9 @@ public class MockUserService_ReturnsGoodData : IUserService
   {
     throw new System.NotImplementedException();
   }
+
+  public Task<UserModel?> GetUserByEmailAddress(string emailAddress)
+  {
+    throw new System.NotImplementedException();
+  }
 }

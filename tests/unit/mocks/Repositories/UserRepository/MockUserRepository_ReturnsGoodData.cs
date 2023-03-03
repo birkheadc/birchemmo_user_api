@@ -94,4 +94,9 @@ public class MockUserRepository_ReturnsGoodData : IUserRepository
   {
     throw new NotImplementedException();
   }
+
+  public Task<UserModel?> FindUserByEmailAddress(string emailAddress)
+  {
+    throw new NotImplementedException();
+  }
 }

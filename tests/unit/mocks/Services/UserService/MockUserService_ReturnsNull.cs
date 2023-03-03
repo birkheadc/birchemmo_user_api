@@ -24,6 +24,11 @@ public class MockUserService_ReturnsNull : IUserService
     return new List<UserModel>();
   }
 
+  public Task<UserModel?> GetUserByEmailAddress(string emailAddress)
+  {
+    throw new System.NotImplementedException();
+  }
+
   public async Task<UserModel?> GetUserById(ObjectId id)
   {
     return null;

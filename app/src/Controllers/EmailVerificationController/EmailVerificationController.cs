@@ -12,11 +12,13 @@ public class EmailVerificationController : ControllerBase
 {
   private readonly IEmailVerificationService emailVerificationService;
   private readonly IEmailService emailService;
+  private readonly IUserService userService;
 
-  public EmailVerificationController(IEmailVerificationService emailVerificationService, IEmailService emailService)
+  public EmailVerificationController(IEmailVerificationService emailVerificationService, IEmailService emailService, IUserService userService)
   {
     this.emailVerificationService = emailVerificationService;
     this.emailService = emailService;
+    this.userService = userService;
   }
 
   [HttpPost]
@@ -36,12 +38,12 @@ public class EmailVerificationController : ControllerBase
   }
 
   [HttpPost]
-  [Route("send")]
-  [SessionTokenAuthorize(Role.UNVALIDATED_USER)]
-  public async Task<IActionResult> SendEmail()
+  [Route("send/{emailAddress}")]
+  public async Task<IActionResult> SendEmail([FromRoute] string emailAddress)
   {
-    UserModel? user = HttpContext.Items["requestUser"] as UserModel;
+    UserModel? user = await userService.GetUserByEmailAddress(emailAddress);
     if (user is null) return Unauthorized();
+    if (user.UserDetails.Role > Role.UNVALIDATED_USER) return BadRequest();
     bool didSend = await emailService.SendVerificationEmail(user);
     if (didSend == true) return Ok();
     return BadRequest();

@@ -10,6 +10,7 @@ public interface IUserService
 {
   public Task<IEnumerable<UserModel>> GetAllUsers();
   public Task<UserModel?> GetUserByUsername(string username);
+  public Task<UserModel?> GetUserByEmailAddress(string emailAddress);
   public Task<UserModel?> GetUserById(ObjectId id);
   public Task<UserModel?> CreateUser(NewUserModel user, Role role = Role.UNVALIDATED_USER);
   public Task DeleteUserById(ObjectId id);

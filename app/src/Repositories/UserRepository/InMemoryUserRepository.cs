@@ -90,4 +90,16 @@ public class InMemoryUserRepository : IUserRepository
     if (users.ContainsKey(id) == false) return;
     users[id].HashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
   }
+
+  public async Task<UserModel?> FindUserByEmailAddress(string emailAddress)
+  {
+    try
+    {
+      return users.Where(user => user.Value.UserDetails.EmailAddress == emailAddress).First().Value;
+    }
+    catch
+    {
+      return null;
+    }
+  }
 }

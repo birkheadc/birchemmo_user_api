@@ -33,6 +33,12 @@ public class UserService : IUserService
     return users;
   }
 
+  public async Task<UserModel?> GetUserByEmailAddress(string emailAddress)
+  {
+    UserModel? user = await userRepository.FindUserByEmailAddress(emailAddress);
+    return user;
+  }
+
   public async Task<UserModel?> GetUserById(ObjectId id)
   {
     UserModel? user = await userRepository.FindUserById(id);
