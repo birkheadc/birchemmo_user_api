@@ -41,6 +41,7 @@ public class EmailVerificationController : ControllerBase
   [Route("send/{emailAddress}")]
   public async Task<IActionResult> SendEmail([FromRoute] string emailAddress)
   {
+    Console.WriteLine("Attempt to resend verification to: " + emailAddress);
     UserModel? user = await userService.GetUserByEmailAddress(emailAddress);
     if (user is null) return Unauthorized();
     if (user.UserDetails.Role > Role.UNVALIDATED_USER) return BadRequest();
