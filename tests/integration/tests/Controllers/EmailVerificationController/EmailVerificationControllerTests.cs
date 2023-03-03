@@ -1,5 +1,7 @@
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using BircheMmoUserApi.Models;
 using BircheMmoUserApi.Services;
@@ -21,7 +23,8 @@ public class EmailVerificationControllerTests
 
     TokenWrapper token = new("badtoken");
 
-    HttpRequestMessage request = new(HttpMethod.Post, $"/api/email-verification/verify/{token.Token}");
+    HttpRequestMessage request = new(HttpMethod.Post, $"/api/email-verification/verify");
+    request.Content = JsonContent.Create(token);
     HttpResponseMessage response = await client.SendAsync(request);
   
     Assert.NotNull(response);
@@ -50,7 +53,8 @@ public class EmailVerificationControllerTests
     TokenWrapper? token = await emailVerificationService.GenerateForUser(user);
     Assert.NotNull(token);
 
-    HttpRequestMessage request = new(HttpMethod.Post, "/api/email-verification/verify/" + token.Token);
+    HttpRequestMessage request = new(HttpMethod.Post, "/api/email-verification/verify/");
+    request.Content = JsonContent.Create(token);
     HttpResponseMessage response = await client.SendAsync(request);
 
     Assert.NotNull(response);

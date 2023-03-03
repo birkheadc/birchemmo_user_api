@@ -20,12 +20,11 @@ public class EmailVerificationController : ControllerBase
   }
 
   [HttpPost]
-  [Route("verify/{verificationCode}")]
-  public async Task<IActionResult> VerifyEmail([FromRoute] string verificationCode)
+  [Route("verify")]
+  public async Task<IActionResult> VerifyEmail([FromBody] TokenWrapper token)
   {
     try
     {
-      TokenWrapper token = new(verificationCode);
       bool isVerified = await emailVerificationService.ValidateUser(token);
       if (isVerified == true) return Ok();
       return Unauthorized();
