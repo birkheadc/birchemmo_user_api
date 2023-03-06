@@ -26,7 +26,7 @@ public class MongoDbUserRepository : IUserRepository
       await userCollection.InsertOneAsync(user);
       return user;
     }
-    catch (Exception e)
+    catch
     {
       return null;
     }
