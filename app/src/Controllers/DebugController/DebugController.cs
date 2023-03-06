@@ -6,7 +6,7 @@ using MongoDB.Bson;
 namespace BircheMmoUserApi.Controllers;
 
 [ApiController]
-[Route("api/debug")]
+[Route("user-api/debug")]
 public class DebugController : ControllerBase
 {
 

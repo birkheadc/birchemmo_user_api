@@ -3,6 +3,8 @@ using BircheMmoUserApi.Filters;
 using BircheMmoUserApi.Repositories;
 using BircheMmoUserApi.Services;
 
+Console.WriteLine("Current environment: " + Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -68,8 +70,6 @@ if (app.Environment.IsDevelopment())
 
 if (app.Environment.IsStaging())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
   app.UseCors("All");
 }
 

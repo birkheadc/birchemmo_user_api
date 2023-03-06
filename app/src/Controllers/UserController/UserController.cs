@@ -9,7 +9,7 @@ namespace BircheMmoUserApi.Controllers;
 
 #pragma warning disable 1998
 [ApiController]
-[Route("api/user")]
+[Route("user-api/user")]
 public class UserController : ControllerBase
 {
   private readonly IUserService userService;
@@ -75,7 +75,8 @@ public class UserController : ControllerBase
     try
     {
       UserModel? userModel = await userService.CreateUser(user);
-      if (userModel is null) return StatusCode(9002);
+      if (userModel is null) return Conflict();
+      Console.WriteLine("C");
       await emailService.SendVerificationEmail(userModel);
       return Ok(converter.ToUserViewModel(userModel));
     }

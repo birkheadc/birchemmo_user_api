@@ -18,12 +18,15 @@ public class MongoDbUserRepository : IUserRepository
 
   public async Task<UserModel?> CreateUser(UserModel user)
   {
+    if (IsUserValid(user) == false) {
+      return null;
+    }
     try
     {
       await userCollection.InsertOneAsync(user);
       return user;
     }
-    catch
+    catch (Exception e)
     {
       return null;
     }
@@ -56,9 +59,11 @@ public class MongoDbUserRepository : IUserRepository
     return await (await userCollection.FindAsync(user => user.UserDetails.Username == username)).FirstOrDefaultAsync();
   }
 
-   public Task UpdateUserDetails(ObjectId id, UserDetails userDetails)
+   public async Task UpdateUserDetails(ObjectId id, UserDetails userDetails)
   {
-    throw new NotImplementedException();
+    FilterDefinition<UserModel> filter = Builders<UserModel>.Filter.Where(user => user.Id == id);
+    UpdateDefinition<UserModel> update = Builders<UserModel>.Update.Set(user => user.UserDetails, userDetails);
+    await userCollection.FindOneAndUpdateAsync(filter, update);
   }
 
   public Task UpdatePassword(ObjectId id, string newPassword)
@@ -66,8 +71,21 @@ public class MongoDbUserRepository : IUserRepository
     throw new NotImplementedException();
   }
 
-  public Task<UserModel?> FindUserByEmailAddress(string emailAddress)
+  public async Task<UserModel?> FindUserByEmailAddress(string emailAddress)
   {
-    throw new NotImplementedException();
+    return await (await userCollection.FindAsync(user => user.UserDetails.EmailAddress == emailAddress)).FirstOrDefaultAsync();
+  }
+
+  private bool IsUserValid(UserModel user)
+  {
+    if (DoesUserWithSameUsernameOrEmailAddressExist(user.UserDetails) == true) return false;
+    return true;
+  }
+
+  private bool DoesUserWithSameUsernameOrEmailAddressExist(UserDetails userDetails)
+  {
+    FilterDefinition<UserModel> filter = Builders<UserModel>.Filter
+      .Where(_ => _.UserDetails.EmailAddress == userDetails.EmailAddress || _.UserDetails.Username == userDetails.Username);
+    return userCollection.Find(filter).Any();
   }
 }

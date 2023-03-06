@@ -7,7 +7,7 @@ namespace BircheMmoUserApi.Controllers;
 
 #pragma warning disable 1998
 [ApiController]
-[Route("api/email-verification")]
+[Route("user-api/email-verification")]
 public class EmailVerificationController : ControllerBase
 {
   private readonly IEmailVerificationService emailVerificationService;

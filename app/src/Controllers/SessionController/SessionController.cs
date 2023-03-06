@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BircheMmoUserApi.Controllers;
 
 [ApiController]
-[Route("api/session")]
+[Route("user-api/session")]
 public class SessionController : ControllerBase
 {
   private readonly ISessionService sessionService;
