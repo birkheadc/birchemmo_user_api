@@ -23,7 +23,7 @@ public class EmailVerificationControllerTests
 
     TokenWrapper token = new("badtoken");
 
-    HttpRequestMessage request = new(HttpMethod.Post, $"/api/email-verification/verify");
+    HttpRequestMessage request = new(HttpMethod.Post, $"/user-api/email-verification/verify");
     request.Content = JsonContent.Create(token);
     HttpResponseMessage response = await client.SendAsync(request);
   
@@ -53,7 +53,7 @@ public class EmailVerificationControllerTests
     TokenWrapper? token = await emailVerificationService.GenerateForUser(user);
     Assert.NotNull(token);
 
-    HttpRequestMessage request = new(HttpMethod.Post, "/api/email-verification/verify/");
+    HttpRequestMessage request = new(HttpMethod.Post, "/user-api/email-verification/verify/");
     request.Content = JsonContent.Create(token);
     HttpResponseMessage response = await client.SendAsync(request);
 
