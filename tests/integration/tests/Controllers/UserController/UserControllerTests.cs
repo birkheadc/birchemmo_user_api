@@ -19,7 +19,7 @@ public class UserControllerTests
     WebApplicationFactory<Program> app = new();
     HttpClient client = app.CreateClient();
 
-    HttpResponseMessage response = await client.GetAsync("/api/user");
+    HttpResponseMessage response = await client.GetAsync("/user-api/user");
     Assert.NotNull(response);
     Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
   }
@@ -61,7 +61,7 @@ public class UserControllerTests
     TokenWrapper token = await GetSessionTokenFromApi(client, credentials);
     Assert.NotNull(token);
 
-    HttpRequestMessage request = new(HttpMethod.Get, "/api/user/all");
+    HttpRequestMessage request = new(HttpMethod.Get, "/user-api/user/all");
     request.Headers.Authorization = new(
       "Bearer",
       token.Token
@@ -88,7 +88,7 @@ public class UserControllerTests
     TokenWrapper token = await GetSessionTokenFromApi(client, credentials);
     Assert.NotNull(token);
 
-    HttpRequestMessage request = new(HttpMethod.Get, "/api/user/all");
+    HttpRequestMessage request = new(HttpMethod.Get, "/user-api/user/all");
     request.Headers.Authorization = new(
       "Bearer",
       token.Token
@@ -110,7 +110,7 @@ public class UserControllerTests
 
   private async Task<TokenWrapper> GetSessionTokenFromApi(HttpClient client, Credentials credentials)
   {
-    HttpRequestMessage request = new(HttpMethod.Get, "/api/session");
+    HttpRequestMessage request = new(HttpMethod.Get, "/user-api/session");
     request.Headers.Authorization = new(
       "Basic",
       credentials.ToBasicAuth()
@@ -128,7 +128,7 @@ public class UserControllerTests
 
   private async Task<UserViewModel> GetUserSelfFromApi(HttpClient client, TokenWrapper token)
   {
-    HttpRequestMessage request = new(HttpMethod.Get, "/api/user");
+    HttpRequestMessage request = new(HttpMethod.Get, "/user-api/user");
     request.Headers.Authorization = new(
       "Bearer",
       token.Token
@@ -147,7 +147,7 @@ public class UserControllerTests
 
   private async Task<List<UserViewModel>?> GetAllUsersFromApi(HttpClient client, TokenWrapper token)
   {
-    HttpRequestMessage request = new(HttpMethod.Get, "/api/user/all");
+    HttpRequestMessage request = new(HttpMethod.Get, "/user-api/user/all");
     request.Headers.Authorization = new(
       "Bearer",
       token.Token
