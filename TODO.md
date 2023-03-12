@@ -8,3 +8,7 @@
   - CreateNewAdmin role should always be ADMIN, this request is only callable by a super admin
 - Build middleware that converts UserModels in response to UserViewModel, just to make sure raw UserModel never escapes
 - Figure out what to do with old accounts that are never verified. Probably purge them after 24 hours?
+- Add a Super User account created when the server is launched
+  - Get default credentials from env variable
+  - Super Admin should change their password asap for security
+  - Check if there is already a super admin in DB on launch, if there isn't, create it; if there is, do nothing
